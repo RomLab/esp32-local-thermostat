@@ -17,5 +17,5 @@ void Ds18b20Setup()
 
 float GetDs18b20Temp() {
   sensors.requestTemperatures(); 
-  return rounsensors.getTempCByIndex(0);
+  return sensors.getTempCByIndex(0);
 }

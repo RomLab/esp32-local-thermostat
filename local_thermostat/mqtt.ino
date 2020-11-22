@@ -226,14 +226,14 @@ void SendTemperature(float temperature) {
     // Publishing data throgh MQTT
     sprintf(data, "%f", temperature);
     Serial.println(data);
-    mqttClient.publish("home/firstfloor/testlocalthermostat", data);
+    mqttClient.publish("home/firstfloor/test_room/temperature", data);
 }
 
 void SendRequiredTemperature(float requiredTemperature) {
     // Publishing data throgh MQTT
         Serial.println("Pozadovana teplota");
     sprintf(data, "%f", requiredTemperature);
-    mqttClient.publish("home/firstfloor/testlocalthermostat/requiredtemperature", data);
+    mqttClient.publish("home/firstfloor/test_room/required_temperature", data);
 }
 
 void Callback(char* topic, byte* payload, unsigned int length) {
@@ -242,7 +242,7 @@ void Callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(topic);
   for (int i = 0; i < length; i++) 
   {
-    if(strcmp(topic,"home/commands/test")==0)
+    if(strcmp(topic,"home/firstfloor/test_room/local_thermostat/required_temperature")==0)
     {
       //String s = String(((char)payload[i]));
       String s = String((char*)payload);
@@ -273,7 +273,7 @@ void Reconnect() {
       {
         Serial.println("Connected.");
         // subscribe to topic
-        mqttClient.subscribe("home/commands/test");
+        mqttClient.subscribe("home/firstfloor/test_room/local_thermostat/required_temperature");
       }  
   }
 }
