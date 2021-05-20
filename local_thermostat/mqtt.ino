@@ -14,9 +14,11 @@
  */
 
 #include <SPI.h>
-#include <Ethernet.h>
-#include <EthernetUdp.h>
-#include "mqtt/local_config.h"  // <--- Change settings for YOUR network here.
+//#include <Ethernet.h>
+//#include <EthernetUdp.h>
+#include "EthernetSPI2.h"
+#include "EthernetUdp.h"
+#include "local_config.h"  // <--- Change settings for YOUR network here.
 #include <PubSubClient.h>
 #include <stdlib.h>
 
@@ -30,7 +32,7 @@ char data[100];
 
 EthernetClient ethClient;
 PubSubClient mqttClient(ethClient); 
-char *mqttServer = "172.16.108.22";
+char *mqttServer = "broker.hivemq.com";//"172.16.108.22";
 int mqttPort = 1883;
 const char* mqttUser = "homeassistant";
 const char* mqttPassword = "VelmiSilneHesloProHomeassistant";
@@ -139,7 +141,7 @@ void MqttSetup() {
     Serial.println("\n\tUDP NTP Client v3.0\r\n");
 
     // Use Ethernet.init(pin) to configure the CS pin.
-    Ethernet.init(5);           // GPIO5 on the ESP32.
+    Ethernet.init(15);           // GPIO5 on the ESP32.
     WizReset();
 
     /* 
@@ -269,7 +271,7 @@ void Reconnect() {
       String clientId = "client1";
       //clientId += String(random(0xffff), HEX);
       
-      if (mqttClient.connect(clientId.c_str(), mqttUser, mqttPassword)) 
+      if (mqttClient.connect(clientId.c_str()/*, mqttUser, mqttPassword*/)) 
       {
         Serial.println("Connected.");
         // subscribe to topic

@@ -2,11 +2,11 @@
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
 
-#define _cs   0   // 3 goes to TFT CS
-#define _dc   2   // 4 goes to TFT DC
-#define _mosi 14  // 5 goes to TFT MOSI
-#define _sclk 12  // 6 goes to TFT SCK/CLK
-#define _rst  13  // ESP RST to TFT RESET
+#define _cs   5   // 3 goes to TFT CS
+#define _dc   4   // 4 goes to TFT DC
+#define _mosi 23  // 5 goes to TFT MOSI
+#define _sclk 18  // 6 goes to TFT SCK/CLK
+#define _rst  22  // ESP RST to TFT RESET
 #define _miso     // Not connected
 //       3.3V     // Goes to TFT LED  
 //       5v       // Goes to TFT Vcc
@@ -22,6 +22,8 @@ long last_time = 0;
 float requireTemperature = 20;
 void setup() 
 {
+  pinMode(21, OUTPUT);
+  digitalWrite(21, HIGH);
   TftSetup();
   Ds18b20Setup();
   MqttSetup();
@@ -32,7 +34,7 @@ void loop()
 {
     MqttLoop();
     long now = millis();
-    if (now - last_time > 30000) 
+    if (now - last_time > 3000) 
     {
       float temp = GetDs18b20Temp();
       SendTemperature(temp);

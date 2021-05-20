@@ -18,7 +18,8 @@
 // GPIO where the DS18B20 is connected to
 //float oldTemepratureC = 0;
 
-bool pressed = false;
+bool pressedPlus = false;
+bool pressedMinus = false;
 
 
 
@@ -34,15 +35,18 @@ void TftSetup() {
   //Serial.begin(9600);
   
   tft.begin();
-  tft.setRotation(3);
+  tft.setRotation(1);
   tft.fillScreen(ILI9341_BLACK);
 
   // Start the DS18B20 sensor
   sensors.begin();
   
 
-  pinMode(15, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(15), PressPlusTemp, FALLING);
+  pinMode(32, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(32), PressPlusTemp, FALLING);
+
+   pinMode(25, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(25), PressMinusTemp, FALLING);
  
   WriteTemperature(requireTemperature, 40, 135, ILI9341_GREEN, 5);
  
@@ -88,17 +92,29 @@ void TftSetup() {
 }*/
 
 void ChangeRequireTemperature() {
-   if(pressed)
+   if(pressedPlus)
    {
      requireTemperature +=0.5;
      WriteTemperature(requireTemperature, 40, 135, ILI9341_GREEN, 5);
-     pressed = false;
+     pressedPlus = false;
+     SendRequiredTemperature(requireTemperature);
+   }
+   if(pressedMinus)
+   {
+     requireTemperature -=0.5;
+     WriteTemperature(requireTemperature, 40, 135, ILI9341_GREEN, 5);
+     pressedMinus = false;
      SendRequiredTemperature(requireTemperature);
    }
 }
 
 void  PressPlusTemp() {
-  pressed = true;
+  pressedPlus = true;
+}
+
+
+void  PressMinusTemp() {
+  pressedMinus = true;
 }
 
 /*float ReadTemeperature() {
