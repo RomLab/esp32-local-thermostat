@@ -18,8 +18,7 @@
 // GPIO where the DS18B20 is connected to
 //float oldTemepratureC = 0;
 
-bool pressedPlus = false;
-bool pressedMinus = false;
+
 
 
 
@@ -32,6 +31,8 @@ bool pressedMinus = false;
 
 
 void TftSetup() {
+  // Turn on Display 
+  pinMode(21, OUTPUT);
   //Serial.begin(9600);
   
   tft.begin();
@@ -42,13 +43,9 @@ void TftSetup() {
   sensors.begin();
   
 
-  pinMode(32, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(32), PressPlusTemp, FALLING);
 
-   pinMode(25, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(25), PressMinusTemp, FALLING);
  
-  WriteTemperature(requireTemperature, 40, 135, ILI9341_GREEN, 5);
+  writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5);
  
  
   // read diagnostics (optional but can help debug problems)
@@ -69,7 +66,22 @@ void TftSetup() {
   Serial.println(testText());
   delay(3000);
 */
+
+  turnOnDisplay();
 }
+
+void turnOnDisplay()
+{
+   isTurnOnDisplay = true;
+   digitalWrite(21, HIGH);
+}
+
+void turnOffDisplay()
+{
+   isTurnOnDisplay = false;
+   digitalWrite(21, LOW);
+}
+
 
 
 // TftLoop(void) {
@@ -91,31 +103,7 @@ void TftSetup() {
    oldTemepratureC = temperatureC;
 }*/
 
-void ChangeRequireTemperature() {
-   if(pressedPlus)
-   {
-     requireTemperature +=0.5;
-     WriteTemperature(requireTemperature, 40, 135, ILI9341_GREEN, 5);
-     pressedPlus = false;
-     SendRequiredTemperature(requireTemperature);
-   }
-   if(pressedMinus)
-   {
-     requireTemperature -=0.5;
-     WriteTemperature(requireTemperature, 40, 135, ILI9341_GREEN, 5);
-     pressedMinus = false;
-     SendRequiredTemperature(requireTemperature);
-   }
-}
 
-void  PressPlusTemp() {
-  pressedPlus = true;
-}
-
-
-void  PressMinusTemp() {
-  pressedMinus = true;
-}
 
 /*float ReadTemeperature() {
   sensors.requestTemperatures(); 
@@ -123,13 +111,28 @@ void  PressMinusTemp() {
   return temperatureC;
 }*/
 
-void WriteTemperature(float temperatureC, int positionX, int positionY, uint16_t colorText, int sizeFont) {
+void writeTemperature(float temperatureC, int positionX, int positionY, uint16_t colorText, int sizeFont) {
+
+  // Clear text
   tft.setCursor(positionX, positionY);
   tft.setTextSize(sizeFont); 
   tft.setTextColor(colorText, ILI9341_BLACK);
-  
+
+  tft.print("        ");
+
+  // Move position x
+  int tempPositionX = positionX;
+  if(temperatureC < 10)
+  {
+     tempPositionX +=18+sizeFont;
+  }
+   
+  tft.setCursor(tempPositionX, positionY);
+  tft.setTextSize(sizeFont); 
+  tft.setTextColor(colorText, ILI9341_BLACK);
   String stringTemperatureC = String(temperatureC); 
   tft.println(stringTemperatureC + " " +(char)247 +"C");
+
   
  /* tft.fillScreen(ILI9341_BLACK);
   unsigned long start = micros();

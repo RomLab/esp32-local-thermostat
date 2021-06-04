@@ -14,11 +14,9 @@
  */
 
 #include <SPI.h>
-//#include <Ethernet.h>
-//#include <EthernetUdp.h>
 #include "EthernetSPI2.h"
 #include "EthernetUdp.h"
-#include "local_config.h"  // <--- Change settings for YOUR network here.
+
 #include <PubSubClient.h>
 #include <stdlib.h>
 
@@ -32,10 +30,10 @@ char data[100];
 
 EthernetClient ethClient;
 PubSubClient mqttClient(ethClient); 
-char *mqttServer = "broker.hivemq.com";//"172.16.108.22";
+char *mqttServer = "broker.hivemq.com";///"192.168.11.247";//"broker.hivemq.com";//"172.16.108.22";
 int mqttPort = 1883;
-const char* mqttUser = "homeassistant";
-const char* mqttPassword = "VelmiSilneHesloProHomeassistant";
+//const char* mqttUser = "homeassistant";
+//const char* mqttPassword = "VelmiSilneHesloProHomeassistant";
 
 // Icons
 extern uint8_t online[];
@@ -140,7 +138,7 @@ void MqttSetup() {
     delay(500);
     Serial.println("\n\tUDP NTP Client v3.0\r\n");
 
-    // Use Ethernet.init(pin) to configure the CS pin.
+//     Use Ethernet.init(pin) to configure the CS pin.
     Ethernet.init(15);           // GPIO5 on the ESP32.
     WizReset();
 
@@ -155,7 +153,7 @@ void MqttSetup() {
     Serial.println("Starting ETHERNET connection...");
     Ethernet.begin(eth_MAC, eth_IP, eth_DNS, eth_GW, eth_MASK);
     // Enable DHCP
-    //Ethernet.begin(eth_MAC);
+    Ethernet.begin(eth_MAC);
 
     delay(200);
 
@@ -183,8 +181,7 @@ void MqttSetup() {
     }
     if (rdy_flag == false) 
     {
-        Serial.println
-            ("\n\r\tHardware fault, or cable problem... cannot continue.");
+        Serial.println("\n\r\tHardware fault, or cable problem... cannot continue.");
         Serial.print("Hardware Status: ");
         prt_hwval(Ethernet.hardwareStatus());
         Serial.print("   Cable Status: ");
@@ -202,6 +199,16 @@ void MqttSetup() {
     Udp.begin(localPort);
     
     SetupMqtt();
+
+ /*MqttLoop  String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
+   int lengthTopicFromSystem = topicFromSystem.length() + 1; 
+   char topicFromSystemArray[lengthTopicFromSystem];
+   topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
+
+   String topicFromDevice = "home/first-floor/"+roomName+"/required-temperature-from-device";
+   int lengthTopicFromDevice= topicFromDevice.length() + 1; 
+   char topicFromDeviceArray[lengthTopicFromDevice];
+   topicFromDevice.toCharArray(topicFromDeviceArray, lengthTopicFromDevice);*/
 }
 
 void MqttLoop()
@@ -227,33 +234,46 @@ void SendTemperature(float temperature) {
     
     // Publishing data throgh MQTT
     sprintf(data, "%f", temperature);
-    Serial.println(data);
-    mqttClient.publish("home/firstfloor/test_room/temperature", data);
+    //Serial.println(data);
+    String s = "home/first-floor/"+roomName+"/temperature";
+    int str_len = s.length() + 1; 
+    char char_array[str_len];
+    s.toCharArray(char_array, str_len);
+    mqttClient.publish(char_array, data);
 }
 
-void SendRequiredTemperature(float requiredTemperature) {
-    // Publishing data throgh MQTT
-        Serial.println("Pozadovana teplota");
+void SendRequiredTemperature(float requiredTemperature) 
+{
+
     sprintf(data, "%f", requiredTemperature);
-    mqttClient.publish("home/firstfloor/test_room/required_temperature", data);
+    String s = "home/first-floor/"+roomName+"/required-temperature-from-device";
+    int str_len = s.length() + 1; 
+    char char_array[str_len];
+    s.toCharArray(char_array, str_len);
+    mqttClient.publish(char_array, data);
 }
 
-void Callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Callback - ");
-  Serial.print("Message:");
-  Serial.print(topic);
+void Callback(char* topic, byte* payload, unsigned int length) 
+{
+
   for (int i = 0; i < length; i++) 
   {
-    if(strcmp(topic,"home/firstfloor/test_room/local_thermostat/required_temperature")==0)
+    String s = "home/first-floor/"+roomName+"/required-temperature-from-system";
+    int str_len = s.length() + 1; 
+    char char_array[str_len];
+    s.toCharArray(char_array, str_len);
+    if(strcmp(topic,char_array)==0)
     {
       //String s = String(((char)payload[i]));
       String s = String((char*)payload);
       float value = s.toFloat();
-      requireTemperature = value;
-      WriteTemperature(value, 40, 135, ILI9341_GREEN, 5);
-       Serial.print(String(value));
+      
+      float real =  value * 10;
+      int rel_int = (int)real;
+    
+      requiredTemperature = (float)rel_int/10;
+      writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5);
     }
-   
   }
 }
 
@@ -263,19 +283,21 @@ void SetupMqtt() {
   mqttClient.setCallback(Callback);
 }
 
-void Reconnect() {
-  Serial.println("Connecting to MQTT Broker...");
+void Reconnect() 
+{
   while (!mqttClient.connected()) 
   {
-      Serial.println("Reconnecting to MQTT Broker..");
       String clientId = "client1";
       //clientId += String(random(0xffff), HEX);
       
       if (mqttClient.connect(clientId.c_str()/*, mqttUser, mqttPassword*/)) 
       {
-        Serial.println("Connected.");
-        // subscribe to topic
-        mqttClient.subscribe("home/firstfloor/test_room/local_thermostat/required_temperature");
+        // Subscribe
+        String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
+        int lengthTopicFromSystem = topicFromSystem.length() + 1; 
+        char topicFromSystemArray[lengthTopicFromSystem];
+        topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
+        mqttClient.subscribe(topicFromSystemArray, 1);
       }  
   }
 }

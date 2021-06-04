@@ -1,6 +1,7 @@
 
 #include "Adafruit_GFX.h"
 #include "Adafruit_ILI9341.h"
+#include "local_config.h"  // <--- Change settings for YOUR network here.
 
 #define _cs   5   // 3 goes to TFT CS
 #define _dc   4   // 4 goes to TFT DC
@@ -16,30 +17,33 @@
 //Adafruit_ILI9341 tft = Adafruit_ILI9341(_CS, _DC);
 // If using the breakout, change pins as desired
 Adafruit_ILI9341 tft = Adafruit_ILI9341(_cs, _dc, _mosi, _sclk, _rst);
+//Adafruit_ILI9341_Albert tft = Adafruit_ILI9341_Albert(_cs, _dc, _mosi, _sclk, _rst);
+
+float requiredTemperature = DEFAULT_REQUIRED_TEMPERATURE;
+float oldRequiredTemperature = 0;
+bool isTurnOnDisplay = false;
+
+bool isNewTemperature = false;
 
 
-long last_time = 0;
-float requireTemperature = 20;
 void setup() 
-{
-  pinMode(21, OUTPUT);
-  digitalWrite(21, HIGH);
+{ 
+  tempSensorSetup();
+  buttonsSetup(); 
+  timersSetup();  
   TftSetup();
-  Ds18b20Setup();
   MqttSetup();
-
 }
 
 void loop() 
 {
-    MqttLoop();
-    long now = millis();
-    if (now - last_time > 3000) 
-    {
-      float temp = GetDs18b20Temp();
-      SendTemperature(temp);
-      WriteTemperature(temp, 16, 80, ILI9341_RED, 6);
-      last_time = now;
-    }
-    ChangeRequireTemperature();
+  loopTimers();
+  loopButton();
+  MqttLoop();
+  if(isNewTemperature)
+  {
+    float temperature = getTemperature();
+    writeTemperature(temperature, 20, 80, ILI9341_RED, 6);
+    SendTemperature(temperature);
+  }
 }

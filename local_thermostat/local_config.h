@@ -9,7 +9,7 @@
 /*
  * W5500 "hardware" MAC address.
  */
-uint8_t eth_MAC[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x87 };
+uint8_t eth_MAC[] = { 0x6C, 0xF0, 0x49, 0x00, 0xDC, 0x1A };
 
 
 /*
@@ -17,10 +17,10 @@ uint8_t eth_MAC[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x87 };
  * on your LAN.  These values must match YOUR SPECIFIC LAN.  The "eth_IP"
  * is the IP address for this gateway's ETHERNET port.
  */
-IPAddress eth_IP(172, 16, 108, 22);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
-IPAddress eth_MASK(255, 255, 254, 0);		// Subnet mask.
+IPAddress eth_IP(147, 32, 119, 171);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
+IPAddress eth_MASK(255, 255, 255, 0);		// Subnet mask.
 IPAddress eth_DNS(147, 32, 127, 214);		// *** CHANGE THIS to match YOUR DNS server.           ***
-IPAddress eth_GW(172, 16, 108, 1);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
+IPAddress eth_GW(147, 32, 119, 1);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
 
 
 #define RESET_P	27				// Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
@@ -45,3 +45,12 @@ const char timeServer[] = "pool.ntp.org";		// Default NTP server pool.
 const uint8_t SLEEP_SECS = 15;			// Number of seconds to sleep between queries to the time
 						// server. Please don't set this any lower than 10 unless
 						// timeServer[] is a local NTP server on -your- network.
+
+// Temperature
+const uint8_t MIN_REQUERED_TEMPERATURE = 0;
+const uint8_t MAX_REQUERED_TEMPERATURE = 30;
+const float CHANGE_TEMPERATURE = 0.5;
+const float DEFAULT_REQUIRED_TEMPERATURE = 20;
+
+// MQTT settings variable
+String roomName = "parents-bedroom";
