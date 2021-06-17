@@ -30,7 +30,7 @@
 
 
 
-void TftSetup() {
+void tftSetup() {
   // Turn on Display 
   pinMode(21, OUTPUT);
   //Serial.begin(9600);
@@ -40,7 +40,7 @@ void TftSetup() {
   tft.fillScreen(ILI9341_BLACK);
 
   // Start the DS18B20 sensor
-  sensors.begin();
+ // sensors.begin();
   
 
 

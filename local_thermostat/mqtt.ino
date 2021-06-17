@@ -20,6 +20,15 @@
 #include <PubSubClient.h>
 #include <stdlib.h>
 
+// SPI bus for Ethernet W5500
+//#define eth_cs   15   
+//#define eth_mosi 13  
+//#define eth_sclk 14  
+//#define eth_rst  27  
+//#define eth_miso 12   
+
+
+
 const int NTP_PACKET_SIZE = 48;   // NTP time stamp is in the first 48 bytes of the message.
 byte packetBuffer[NTP_PACKET_SIZE]; // Buffer for both incoming and outgoing packets.
 
@@ -45,12 +54,12 @@ extern uint8_t offline[];
 void WizReset() 
 {
     Serial.print("Resetting Wiz W5500 Ethernet Board...  ");
-    pinMode(RESET_P, OUTPUT);
-    digitalWrite(RESET_P, HIGH);
+    pinMode(ETHERNET_PIN_RST, OUTPUT);
+    digitalWrite(ETHERNET_PIN_RST, HIGH);
     delay(250);
-    digitalWrite(RESET_P, LOW);
+    digitalWrite(ETHERNET_PIN_RST, LOW);
     delay(50);
-    digitalWrite(RESET_P, HIGH);
+    digitalWrite(ETHERNET_PIN_RST, HIGH);
     delay(350);
     Serial.println("Done.");
 }
@@ -132,14 +141,14 @@ void prt_ethval(uint8_t refval) {
     }
 }
 
-
-void MqttSetup() {
-    Serial.begin(115200);
+    
+void mqttSetup() {
+  //  Serial.begin(115200);
     delay(500);
     Serial.println("\n\tUDP NTP Client v3.0\r\n");
 
-//     Use Ethernet.init(pin) to configure the CS pin.
-    Ethernet.init(15);           // GPIO5 on the ESP32.
+    // Use Ethernet.init(pin) to configure the CS pin.
+    Ethernet.init(ETHERNET_PIN_SPI_CS);  
     WizReset();
 
     /* 
@@ -164,8 +173,44 @@ void MqttSetup() {
      * Sanity checks for W5500 and cable connection.
      */
     Serial.print("Checking connection.");
-    bool rdy_flag = false;
-    for (uint8_t i = 0; i <= 20; i++) 
+    if (!getStatusEthernet()) 
+    {
+        Serial.println("\n\r\tHardware fault, or cable problem... cannot continue.");
+        Serial.print("Hardware Status: ");
+        prt_hwval(Ethernet.hardwareStatus());
+        Serial.print("   Cable Status: ");
+        prt_ethval(Ethernet.linkStatus());
+        isConnectedEthernet = false;
+       /* while (true) 
+        {
+            delay(10);          // Halt.
+        }*/
+    } 
+    else 
+    {
+        isConnectedEthernet = true;
+        Serial.println(" OK");
+        Udp.begin(localPort);
+        SetupMqtt();
+    }
+
+
+
+ /*MqttLoop  String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
+   int lengthTopicFromSystem = topicFromSystem.length() + 1; 
+   char topicFromSystemArray[lengthTopicFromSystem];
+   topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
+
+   String topicFromDevice = "home/first-floor/"+roomName+"/required-temperature-from-device";
+   int lengthTopicFromDevice= topicFromDevice.length() + 1; 
+   char topicFromDeviceArray[lengthTopicFromDevice];
+   topicFromDevice.toCharArray(topicFromDeviceArray, lengthTopicFromDevice);*/
+}
+
+bool getStatusEthernet()
+{
+   bool rdy_flag = false;
+   for (uint8_t i = 0; i <= 20; i++) 
     {
         if ((Ethernet.hardwareStatus() == EthernetNoHardware)
             || (Ethernet.linkStatus() == LinkOFF)) {
@@ -179,54 +224,34 @@ void MqttSetup() {
             break;
         }
     }
-    if (rdy_flag == false) 
-    {
-        Serial.println("\n\r\tHardware fault, or cable problem... cannot continue.");
-        Serial.print("Hardware Status: ");
-        prt_hwval(Ethernet.hardwareStatus());
-        Serial.print("   Cable Status: ");
-        prt_ethval(Ethernet.linkStatus());
-        while (true) 
-        {
-            delay(10);          // Halt.
-        }
-    } 
-    else 
-    {
-        Serial.println(" OK");
-    }
 
-    Udp.begin(localPort);
-    
-    SetupMqtt();
-
- /*MqttLoop  String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
-   int lengthTopicFromSystem = topicFromSystem.length() + 1; 
-   char topicFromSystemArray[lengthTopicFromSystem];
-   topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
-
-   String topicFromDevice = "home/first-floor/"+roomName+"/required-temperature-from-device";
-   int lengthTopicFromDevice= topicFromDevice.length() + 1; 
-   char topicFromDeviceArray[lengthTopicFromDevice];
-   topicFromDevice.toCharArray(topicFromDeviceArray, lengthTopicFromDevice);*/
+    return rdy_flag;
 }
 
-void MqttLoop()
+void mqttLoop()
 {
-  if (!mqttClient.connected())
+   if(isConnectedEthernet)
   {
-    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
-    Reconnect();
+    if (!mqttClient.connected())
+    {
+      tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
+      Reconnect();
+    }
+    else
+    {
+      tft.drawBitmap(0, 0, online, 20, 20, ILI9341_GREEN);
+      mqttClient.loop();
+    }
   }
   else
   {
-    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_GREEN);
+    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
   }
-          
-   mqttClient.loop();
 }
 void SendTemperature(float temperature) {
-  
+
+  if(isConnectedEthernet)
+  {
     //if (!mqttClient.connected())
     //  Reconnect();
       
@@ -240,6 +265,7 @@ void SendTemperature(float temperature) {
     char char_array[str_len];
     s.toCharArray(char_array, str_len);
     mqttClient.publish(char_array, data);
+  }
 }
 
 void SendRequiredTemperature(float requiredTemperature) 
@@ -285,9 +311,11 @@ void SetupMqtt() {
 
 void Reconnect() 
 {
-  while (!mqttClient.connected()) 
+  if(getStatusEthernet())
   {
-      String clientId = "client1";
+    while (!mqttClient.connected()) 
+    {
+      String clientId = roomName;
       //clientId += String(random(0xffff), HEX);
       
       if (mqttClient.connect(clientId.c_str()/*, mqttUser, mqttPassword*/)) 
@@ -299,5 +327,10 @@ void Reconnect()
         topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
         mqttClient.subscribe(topicFromSystemArray, 1);
       }  
+    }
+  }
+  else
+  {
+    Serial.println("Disconnect cable");
   }
 }
