@@ -14,7 +14,7 @@ void tempSensorSetup()
 
 float getTemperature() 
 {
-  float correction = 5.5;  
+  float correction = 3.6;  
   float sumTemperatures = 0;
   for (int index = 0; index < 3; index++)
   {
