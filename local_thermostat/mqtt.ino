@@ -20,15 +20,6 @@
 #include <PubSubClient.h>
 #include <stdlib.h>
 
-// SPI bus for Ethernet W5500
-//#define eth_cs   15   
-//#define eth_mosi 13  
-//#define eth_sclk 14  
-//#define eth_rst  27  
-//#define eth_miso 12   
-
-
-
 const int NTP_PACKET_SIZE = 48;   // NTP time stamp is in the first 48 bytes of the message.
 byte packetBuffer[NTP_PACKET_SIZE]; // Buffer for both incoming and outgoing packets.
 
@@ -110,7 +101,6 @@ void prt_hwval(uint8_t refval)
     }
 }
 
-
 /*
  * Print the result of the ethernet connection
  * status enum as a string.
@@ -143,7 +133,7 @@ void prt_ethval(uint8_t refval) {
 
     
 void mqttSetup() {
-  //  Serial.begin(115200);
+
     delay(500);
     Serial.println("\n\tUDP NTP Client v3.0\r\n");
 
@@ -161,8 +151,9 @@ void mqttSetup() {
      */
     Serial.println("Starting ETHERNET connection...");
     Ethernet.begin(eth_MAC, eth_IP, eth_DNS, eth_GW, eth_MASK);
+    Serial.println("test");
     // Enable DHCP
-    Ethernet.begin(eth_MAC);
+   // Ethernet.begin(eth_MAC);
 
     delay(200);
 
@@ -193,18 +184,6 @@ void mqttSetup() {
         Udp.begin(localPort);
         SetupMqtt();
     }
-
-
-
- /*MqttLoop  String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
-   int lengthTopicFromSystem = topicFromSystem.length() + 1; 
-   char topicFromSystemArray[lengthTopicFromSystem];
-   topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
-
-   String topicFromDevice = "home/first-floor/"+roomName+"/required-temperature-from-device";
-   int lengthTopicFromDevice= topicFromDevice.length() + 1; 
-   char topicFromDeviceArray[lengthTopicFromDevice];
-   topicFromDevice.toCharArray(topicFromDeviceArray, lengthTopicFromDevice);*/
 }
 
 bool getStatusEthernet()
@@ -298,7 +277,7 @@ void Callback(char* topic, byte* payload, unsigned int length)
       int rel_int = (int)real;
     
       requiredTemperature = (float)rel_int/10;
-      writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5);
+      writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
     }
   }
 }

@@ -23,6 +23,6 @@ float getTemperature()
   } 
   float avarageTemperature = ((float)sumTemperatures) / 3 ;
   float roundTemperature = round((avarageTemperature) * 10) / 10;
-    
+  oldTemperature = roundTemperature; 
   return (roundTemperature);
 }

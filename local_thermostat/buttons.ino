@@ -49,10 +49,9 @@ void loopButton()
       if(isTurnOnDisplay && millis() - lastInterruptPlusButtonTurnOnDisplay > NEXT_INTERRUPT_BUTTON_TURN_ON_DISPLAY)
       {
         startTimerForTurnOffDisplay();   
-        oldRequiredTemperature =  requiredTemperature;
-       // requiredTemperature += CHANGE_TEMPERATURE;
+        oldRequiredTemperature =  requiredTemperature;       
         changeRequredTemperature(true);
-        writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5);
+        writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
         lastInterruptPlusButton = millis();
       }
       else
@@ -74,9 +73,8 @@ void loopButton()
       {
         startTimerForTurnOffDisplay();   
         oldRequiredTemperature =  requiredTemperature;
-        //requiredTemperature -= CHANGE_TEMPERATURE;
         changeRequredTemperature(false);
-        writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5);
+        writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
         lastInterruptMinusButton = millis();
       }
       else
