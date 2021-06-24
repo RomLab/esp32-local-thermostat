@@ -30,10 +30,10 @@ char data[100];
 
 EthernetClient ethClient;
 PubSubClient mqttClient(ethClient); 
-char *mqttServer = "broker.hivemq.com";///"192.168.11.247";//"broker.hivemq.com";//"172.16.108.22";
+char *mqttServer = "192.168.11.247";
 int mqttPort = 1883;
-//const char* mqttUser = "homeassistant";
-//const char* mqttPassword = "VelmiSilneHesloProHomeassistant";
+const char* mqttUser = "homeassistant";
+const char* mqttPassword = "VelmiSilneHesloProHomeassistant";
 
 // Icons
 extern uint8_t online[];
@@ -279,7 +279,7 @@ void reconnect()
       String clientId = roomName;
       //clientId += String(random(0xffff), HEX);
       
-      if (mqttClient.connect(clientId.c_str()/*, mqttUser, mqttPassword*/)) 
+      if (mqttClient.connect(clientId.c_str(), mqttUser, mqttPassword)) 
       {
         // Subscribe
         mqttClient.subscribe(getTopicArray(topicFromSystem), 1);
