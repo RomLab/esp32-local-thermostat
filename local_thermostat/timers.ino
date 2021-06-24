@@ -40,9 +40,10 @@ void loopTimers()
     //Serial.println("Turn OFF");
     stopTimerForTurnOffDisplay();
     turnOffDisplay();
-    SendRequiredTemperature(requiredTemperature);
+    sendRequiredTemperature(requiredTemperature);
     interruptCounter = 0;
     portEXIT_CRITICAL(&timerMux);
+   
   }
   
   if (interruptCounterTemp == 30) 

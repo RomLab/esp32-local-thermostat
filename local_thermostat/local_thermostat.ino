@@ -52,7 +52,7 @@ void loop()
     writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);
     if(isConnectedEthernet)
     {
-       SendTemperature(temperature);
+       sendTemperature(temperature);
     }
   }
 

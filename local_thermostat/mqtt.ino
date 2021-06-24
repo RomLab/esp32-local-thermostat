@@ -24,7 +24,7 @@ const int NTP_PACKET_SIZE = 48;   // NTP time stamp is in the first 48 bytes of 
 byte packetBuffer[NTP_PACKET_SIZE]; // Buffer for both incoming and outgoing packets.
 
 // A UDP instance to let us send and receive packets over UDP.
-EthernetUDP Udp;
+EthernetUDP udp;
 
 char data[100];
 
@@ -48,7 +48,7 @@ String topicTemperature = "home/first-floor/"+roomName+"/temperature";
  * Wiz W5500 reset function.  Change this for the specific reset
  * sequence required for your particular board or module.
  */
-void WizReset() 
+void wizReset() 
 {
     Serial.print("Resetting Wiz W5500 Ethernet Board...  ");
     pinMode(ETHERNET_PIN_RST, OUTPUT);
@@ -138,14 +138,14 @@ void prt_ethval(uint8_t refval) {
 }
 
     
-void mqttSetup() {
-
+void mqttSetup() 
+{
     delay(500);
     Serial.println("\n\tUDP NTP Client v3.0\r\n");
 
     // Use Ethernet.init(pin) to configure the CS pin.
     Ethernet.init(ETHERNET_PIN_SPI_CS);  
-    WizReset();
+    wizReset();
 
     /* 
      * Network configuration - all except the MAC are optional.
@@ -159,7 +159,7 @@ void mqttSetup() {
     Ethernet.begin(eth_MAC, eth_IP, eth_DNS, eth_GW, eth_MASK);
     Serial.println("test");
     // Enable DHCP
-   // Ethernet.begin(eth_MAC);
+    Ethernet.begin(eth_MAC);
 
     delay(200);
 
@@ -178,17 +178,13 @@ void mqttSetup() {
         Serial.print("   Cable Status: ");
         prt_ethval(Ethernet.linkStatus());
         isConnectedEthernet = false;
-       /* while (true) 
-        {
-            delay(10);          // Halt.
-        }*/
     } 
     else 
     {
         isConnectedEthernet = true;
         Serial.println(" OK");
-        Udp.begin(localPort);
-        SetupMqtt();
+        udp.begin(localPort);
+        setMqtt();
     }
 }
 
@@ -220,7 +216,7 @@ void mqttLoop()
     if (!mqttClient.connected())
     {
       tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
-      Reconnect();
+      reconnect();
     }
     else
     {
@@ -234,15 +230,10 @@ void mqttLoop()
   }
 }
 
-void SendTemperature(float temperature) 
+void sendTemperature(float temperature) 
 {
   if(isConnectedEthernet)
-  {
-    //if (!mqttClient.connected())
-    //  Reconnect();
-      
-   // mqttClient.loop();
-    
+  {    
     // Publishing data throgh MQTT
     sprintf(data, "%f", temperature);
 
@@ -250,20 +241,18 @@ void SendTemperature(float temperature)
   }
 }
 
-void SendRequiredTemperature(float requiredTemperature) 
+void sendRequiredTemperature(float requiredTemperature) 
 {
   sprintf(data, "%f", requiredTemperature);
   mqttClient.publish(getTopicArray(topicFromDevice), data);
 }
 
-void Callback(char* topic, byte* payload, unsigned int length) 
+void callback(char* topic, byte* payload, unsigned int length) 
 {
-
   for (int i = 0; i < length; i++) 
   {    
     if(strcmp(topic, getTopicArray(topicFromSystem))==0)
     {
-      //String s = String(((char)payload[i]));
       String s = String((char*)payload);
       float value = s.toFloat();
       
@@ -277,13 +266,13 @@ void Callback(char* topic, byte* payload, unsigned int length)
   }
 }
 
-void SetupMqtt() {
+void setMqtt() {
   mqttClient.setServer(mqttServer, mqttPort);
-  // set the callback function
-  mqttClient.setCallback(Callback);
+  // Sets the callback function
+  mqttClient.setCallback(callback);
 }
 
-void Reconnect() 
+void reconnect() 
 {
   if(getStatusEthernet())
   {
