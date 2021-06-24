@@ -38,6 +38,12 @@ int mqttPort = 1883;
 // Icons
 extern uint8_t online[];
 extern uint8_t offline[];
+
+// MQTT topic
+String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
+String topicFromDevice = "home/first-floor/"+roomName+"/required-temperature-from-device";
+String topicTemperature = "home/first-floor/"+roomName+"/temperature";
+
 /*
  * Wiz W5500 reset function.  Change this for the specific reset
  * sequence required for your particular board or module.
@@ -227,8 +233,9 @@ void mqttLoop()
     tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
   }
 }
-void SendTemperature(float temperature) {
 
+void SendTemperature(float temperature) 
+{
   if(isConnectedEthernet)
   {
     //if (!mqttClient.connected())
@@ -238,36 +245,23 @@ void SendTemperature(float temperature) {
     
     // Publishing data throgh MQTT
     sprintf(data, "%f", temperature);
-    //Serial.println(data);
-    String s = "home/first-floor/"+roomName+"/temperature";
-    int str_len = s.length() + 1; 
-    char char_array[str_len];
-    s.toCharArray(char_array, str_len);
-    mqttClient.publish(char_array, data);
+
+    mqttClient.publish(getTopicArray(topicTemperature), data);
   }
 }
 
 void SendRequiredTemperature(float requiredTemperature) 
 {
-
-    sprintf(data, "%f", requiredTemperature);
-    String s = "home/first-floor/"+roomName+"/required-temperature-from-device";
-    int str_len = s.length() + 1; 
-    char char_array[str_len];
-    s.toCharArray(char_array, str_len);
-    mqttClient.publish(char_array, data);
+  sprintf(data, "%f", requiredTemperature);
+  mqttClient.publish(getTopicArray(topicFromDevice), data);
 }
 
 void Callback(char* topic, byte* payload, unsigned int length) 
 {
 
   for (int i = 0; i < length; i++) 
-  {
-    String s = "home/first-floor/"+roomName+"/required-temperature-from-system";
-    int str_len = s.length() + 1; 
-    char char_array[str_len];
-    s.toCharArray(char_array, str_len);
-    if(strcmp(topic,char_array)==0)
+  {    
+    if(strcmp(topic, getTopicArray(topicFromSystem))==0)
     {
       //String s = String(((char)payload[i]));
       String s = String((char*)payload);
@@ -275,7 +269,8 @@ void Callback(char* topic, byte* payload, unsigned int length)
       
       float real =  value * 10;
       int rel_int = (int)real;
-    
+      
+      oldRequiredTemperature = requiredTemperature;
       requiredTemperature = (float)rel_int/10;
       writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
     }
@@ -300,11 +295,7 @@ void Reconnect()
       if (mqttClient.connect(clientId.c_str()/*, mqttUser, mqttPassword*/)) 
       {
         // Subscribe
-        String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
-        int lengthTopicFromSystem = topicFromSystem.length() + 1; 
-        char topicFromSystemArray[lengthTopicFromSystem];
-        topicFromSystem.toCharArray(topicFromSystemArray, lengthTopicFromSystem);
-        mqttClient.subscribe(topicFromSystemArray, 1);
+        mqttClient.subscribe(getTopicArray(topicFromSystem), 1);
       }  
     }
   }
@@ -312,4 +303,12 @@ void Reconnect()
   {
     Serial.println("Disconnect cable");
   }
+}
+
+char* getTopicArray(String topic)
+{
+  int lengthTopic = topic.length() + 1;    
+  char * topicArray = (char *) malloc (lengthTopic);
+  topic.toCharArray(topicArray, lengthTopic);
+  return topicArray;
 }
