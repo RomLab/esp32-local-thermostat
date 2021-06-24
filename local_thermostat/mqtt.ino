@@ -40,9 +40,10 @@ extern uint8_t online[];
 extern uint8_t offline[];
 
 // MQTT topic
-String topicFromSystem = "home/first-floor/"+roomName+"/required-temperature-from-system";
-String topicFromDevice = "home/first-floor/"+roomName+"/required-temperature-from-device";
-String topicTemperature = "home/first-floor/"+roomName+"/temperature";
+String samePrefix = "home/first-floor/"+roomName;
+String topicFromSystem = samePrefix+"/required-temperature-from-system";
+String topicFromDevice = samePrefix+"/required-temperature-from-device";
+String topicTemperature = samePrefix+"/temperature";
 
 /*
  * Wiz W5500 reset function.  Change this for the specific reset
@@ -157,7 +158,6 @@ void mqttSetup()
      */
     Serial.println("Starting ETHERNET connection...");
     Ethernet.begin(eth_MAC, eth_IP, eth_DNS, eth_GW, eth_MASK);
-    Serial.println("test");
     // Enable DHCP
     Ethernet.begin(eth_MAC);
 
@@ -251,16 +251,14 @@ void callback(char* topic, byte* payload, unsigned int length)
 {
   for (int i = 0; i < length; i++) 
   {    
-    if(strcmp(topic, getTopicArray(topicFromSystem))==0)
+    if(strcmp(topic, getTopicArray(topicFromSystem)) == 0)
     {
-      String s = String((char*)payload);
-      float value = s.toFloat();
-      
-      float real =  value * 10;
-      int rel_int = (int)real;
+      String stringPayload = String((char*)payload);
+      float value = stringPayload.toFloat();
+      int intValue = (int)( value * 10);
       
       oldRequiredTemperature = requiredTemperature;
-      requiredTemperature = (float)rel_int/10;
+      requiredTemperature = (float)intValue/10;
       writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
     }
   }

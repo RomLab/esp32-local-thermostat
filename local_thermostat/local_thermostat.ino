@@ -17,7 +17,7 @@
 #define ETHERNET_PIN_SPI_MOSI  (13)
 #define ETHERNET_PIN_SPI_MISO  (12)
 #define ETHERNET_PIN_SPI_SCK   (14)
-#define ETHERNET_PIN_RST       (27)        // Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
+#define ETHERNET_PIN_RST       (27) // Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_PIN_SPI_CS, DISPLAY_PIN_SPI_DC, DISPLAY_PIN_SPI_MOSI, DISPLAY_PIN_SPI_SCLK, DISPLAY_PIN_SPI_RST);
 
