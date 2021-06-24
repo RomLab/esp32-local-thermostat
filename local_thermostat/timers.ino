@@ -33,17 +33,14 @@ void timersSetup()
 
 void loopTimers()
 {
-  // Serial.println("Test" + interruptCounter);
   if (interruptCounter == 30) 
   {
     portENTER_CRITICAL(&timerMux);
-    //Serial.println("Turn OFF");
     stopTimerForTurnOffDisplay();
     turnOffDisplay();
     sendRequiredTemperature(requiredTemperature);
     interruptCounter = 0;
-    portEXIT_CRITICAL(&timerMux);
-   
+    portEXIT_CRITICAL(&timerMux); 
   }
   
   if (interruptCounterTemp == 30) 
