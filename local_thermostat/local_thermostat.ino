@@ -28,7 +28,7 @@ bool isTurnOnDisplay = false;
 
 bool isNewTemperature = false;
 bool isConnectedEthernet = false;
-
+bool isTurnOffDisplay = false;
 
 void setup() 
 { 
@@ -46,7 +46,7 @@ void loop()
   loopButton();
   mqttLoop();
   
-  if(isNewTemperature)
+  if(isNewTemperature && isTurnOffDisplay)
   {
     float temperature = getTemperature();
     writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);

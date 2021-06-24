@@ -65,6 +65,7 @@ void startTimerForTurnOffDisplay()
   timerAttachInterrupt(timer, &onTimer, true);
   timerAlarmWrite(timer, 1000000, true);
   timerAlarmEnable(timer);
+  isTurnOffDisplay = false;
 }
 
 void stopTimerForTurnOffDisplay()
@@ -73,6 +74,7 @@ void stopTimerForTurnOffDisplay()
   timerDetachInterrupt(timer);
   timerEnd(timer);
   timer = NULL;
+  isTurnOffDisplay = true;
 }
 
 void startTimerForSampleTemp()
