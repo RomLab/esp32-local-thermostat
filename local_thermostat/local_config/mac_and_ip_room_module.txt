@@ -1,0 +1,32 @@
+Thomas bedroom
+DC-A6-32-25-1D-01
+192.168.11.22
+
+KuKitchen, workroom, living and diving room
+DC-A6-32-25-1D-02
+192.168.11.23
+
+Corridor and toiler
+DC-A6-32-25-1D-03
+192.168.11.24
+
+Bathroom
+DC-A6-32-25-1D-04
+192.168.11.25
+
+North room
+DC-A6-32-25-1D-05
+192.168.11.26
+
+Parents bedroom
+DC-A6-32-25-1D-06
+192.168.11.27
+
+Middle room
+DC-A6-32-25-1D-07
+192.168.11.28
+
+Corner room
+DC-A6-32-25-1D-08
+192.168.11.29
+
