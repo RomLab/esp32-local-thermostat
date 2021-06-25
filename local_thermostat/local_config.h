@@ -9,7 +9,7 @@
 /*
  * W5500 "hardware" MAC address.
  */
-uint8_t eth_MAC[] = { 0x6C, 0xF0, 0x49, 0x00, 0xDC, 0x1A };
+uint8_t eth_MAC[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x01 };
 
 
 /*
@@ -17,15 +17,15 @@ uint8_t eth_MAC[] = { 0x6C, 0xF0, 0x49, 0x00, 0xDC, 0x1A };
  * on your LAN.  These values must match YOUR SPECIFIC LAN.  The "eth_IP"
  * is the IP address for this gateway's ETHERNET port.
  */
-IPAddress eth_IP(147, 32, 119, 171);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
-IPAddress eth_MASK(255, 255, 255, 0);		// Subnet mask.
-IPAddress eth_DNS(147, 32, 127, 214);		// *** CHANGE THIS to match YOUR DNS server.           ***
-IPAddress eth_GW(147, 32, 119, 1);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
+IPAddress eth_IP(192, 168, 11, 22);    // *** CHANGE THIS to something relevant for YOUR LAN. ***
+IPAddress eth_MASK(255, 255, 255, 0);   // Subnet mask.
+IPAddress eth_DNS(8, 8, 8, 8);    // *** CHANGE THIS to match YOUR DNS server.           ***
+IPAddress eth_GW(192, 168, 11, 254);    // *** CHANGE THIS to match YOUR Gateway (router).     ***
 
 
-#define RESET_P	27				// Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
+#define RESET_P 27        // Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
 
-const uint16_t localPort = 55432;		// Local port for UDP packets.
+const uint16_t localPort = 55432;   // Local port for UDP packets.
 
 /*
  * Choose the NTP server pool for your geographical region for best
@@ -33,18 +33,18 @@ const uint16_t localPort = 55432;		// Local port for UDP packets.
  *
  * *** Uncomment only one of the following "timeServer[]" defines. ***
  */
-const char timeServer[] = "pool.ntp.org";		// Default NTP server pool.
-// const char timeServer[] = "africa.pool.ntp.org";		// Regional server pool.
-// const char timeServer[] = "asia.pool.ntp.org";		// Regional server pool.
-// const char timeServer[] = "europe.pool.ntp.org";		// Regional server pool.
-// const char timeServer[] = "north-america.pool.ntp.org";	// Regional server pool.
-// const char timeServer[] = "oceania.pool.ntp.org";		// Regional server pool.
-// const char timeServer[] = "south-america.pool.ntp.org";	// Regional server pool.
-// const char timeServer[] = "time.nist.gov";			// Original example target server (least preferred).
+const char timeServer[] = "pool.ntp.org";   // Default NTP server pool.
+// const char timeServer[] = "africa.pool.ntp.org";   // Regional server pool.
+// const char timeServer[] = "asia.pool.ntp.org";   // Regional server pool.
+// const char timeServer[] = "europe.pool.ntp.org";   // Regional server pool.
+// const char timeServer[] = "north-america.pool.ntp.org";  // Regional server pool.
+// const char timeServer[] = "oceania.pool.ntp.org";    // Regional server pool.
+// const char timeServer[] = "south-america.pool.ntp.org";  // Regional server pool.
+// const char timeServer[] = "time.nist.gov";     // Original example target server (least preferred).
 
-const uint8_t SLEEP_SECS = 15;			// Number of seconds to sleep between queries to the time
-						// server. Please don't set this any lower than 10 unless
-						// timeServer[] is a local NTP server on -your- network.
+const uint8_t SLEEP_SECS = 15;      // Number of seconds to sleep between queries to the time
+            // server. Please don't set this any lower than 10 unless
+            // timeServer[] is a local NTP server on -your- network.
 
 // Temperature
 const uint8_t MIN_REQUERED_TEMPERATURE = 0;
@@ -53,4 +53,4 @@ const float CHANGE_TEMPERATURE = 0.5;
 const float DEFAULT_REQUIRED_TEMPERATURE = 20;
 
 // MQTT settings variable
-String roomName = "parents-bedroom";
+String roomName = "thomas-bedroom";
