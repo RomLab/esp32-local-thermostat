@@ -159,7 +159,7 @@ void mqttSetup()
     Serial.println("Starting ETHERNET connection...");
     Ethernet.begin(eth_MAC, eth_IP, eth_DNS, eth_GW, eth_MASK);
     // Enable DHCP
-    Ethernet.begin(eth_MAC);
+    //Ethernet.begin(eth_MAC);
 
     delay(200);
 
@@ -256,6 +256,7 @@ void callback(char* topic, byte* payload, unsigned int length)
       String stringPayload = String((char*)payload);
       float value = stringPayload.toFloat();
       int intValue = (int)( value * 10);
+      
       
       oldRequiredTemperature = requiredTemperature;
       requiredTemperature = (float)intValue/10;
