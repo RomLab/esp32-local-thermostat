@@ -21,14 +21,22 @@
 
 Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_PIN_SPI_CS, DISPLAY_PIN_SPI_DC, DISPLAY_PIN_SPI_MOSI, DISPLAY_PIN_SPI_SCLK, DISPLAY_PIN_SPI_RST);
 
+// Icons of connection
+extern uint8_t online[];
+extern uint8_t offline[];
+
+
 float requiredTemperature = DEFAULT_REQUIRED_TEMPERATURE;
 float oldRequiredTemperature = 0;
 float oldTemperature = 0;
 bool isTurnOnDisplay = false;
 
 bool isNewTemperature = false;
-bool isConnectedEthernet = false;
+bool isConnection = false;
 bool isTurnOffDisplay = false;
+bool isNewRequiredTemperatureFromSystem = false;
+
+
 
 void setup() 
 { 
@@ -37,27 +45,62 @@ void setup()
   buttonsSetup(); 
   timersSetup();  
   tftSetup();
-  mqttSetup();
+
+  if(typeOfConnection == WIFI)
+  {
+    setupWifi();
+  }
+  else
+  {
+     setupEthernet();
+  }
 }
 
 void loop() 
 {
   loopTimers();
   loopButton();
-  mqttLoop();
+  setIconOfConnection();
   
   if(isNewTemperature && isTurnOffDisplay)
   {
     float temperature = getTemperature();
     writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);
-    if(isConnectedEthernet)
+    if(isConnection)
     {
        sendTemperature(temperature);
     }
   }
 
-  if(!isConnectedEthernet)
+  if(!isConnection)
   {
-     mqttSetup();
+    if(typeOfConnection == ETHERNET)
+    {
+      setupEthernet();
+    }
+    // WiFi have custom loop
+  }
+
+  if(typeOfConnection == ETHERNET)
+  {
+    mqttLoopEthernet();
+  }
+
+  if(isNewRequiredTemperatureFromSystem)
+  {
+    writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
+    isNewRequiredTemperatureFromSystem = false;
+  }
+}
+
+void setIconOfConnection()
+{
+  if(isConnection)
+  {
+    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_GREEN);;
+  }
+  else
+  {
+    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
   }
 }

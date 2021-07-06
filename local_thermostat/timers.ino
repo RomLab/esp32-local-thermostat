@@ -37,10 +37,10 @@ void loopTimers()
   {
     portENTER_CRITICAL(&timerMux);
     stopTimerForTurnOffDisplay();
-    turnOffDisplay();
-    sendRequiredTemperature(requiredTemperature);
+    turnOffDisplay(); 
     interruptCounter = 0;
     portEXIT_CRITICAL(&timerMux); 
+    sendRequiredTemperature(requiredTemperature);
   }
   
   if (interruptCounterTemp == 30) 
