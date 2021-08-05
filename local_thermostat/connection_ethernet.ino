@@ -15,6 +15,8 @@ PubSubClient mqttClientEthernet(ethClient);
 // A UDP instance to let us send and receive packets over UDP.
 EthernetUDP udp;
 
+
+
 /*
  * Wiz W5500 reset function.  Change this for the specific reset
  * sequence required for your particular board or module.
@@ -173,25 +175,21 @@ void setMqtt()
   connectMqttEthernet();
 }
 
-
 void connectMqttEthernet() 
 {
-  if(getStatusEthernet())
+  if (!mqttClientEthernet.connected()) 
   {
-    while (!mqttClientEthernet.connected()) 
+    String clientId = roomName;
+    //clientId += String(random(0xffff), HEX);     
+    if (mqttClientEthernet.connect(clientId.c_str(), MQTT_USER, MQTT_PASSWORD)) 
     {
-      String clientId = roomName;
-      //clientId += String(random(0xffff), HEX);
-      
-      if (mqttClientEthernet.connect(clientId.c_str(), MQTT_USER, MQTT_PASSWORD)) 
-      {
-        setSubscribe();
-      }  
+      setSubscribe();
+      Serial.println("Connected to MQTT broker.");
     }
-  }
-  else
-  {
-    Serial.println("Disconnect cable");
+    else
+    {
+      Serial.println("Problem with connection to MQTT broker.");
+    }
   }
 }
 
@@ -201,31 +199,33 @@ void mqttLoopEthernet()
   {
     if (!mqttClientEthernet.connected())
     {
-      connectMqttEthernet();
+      setMqtt();
     }
     else
     {
-      mqttClientEthernet.loop();
+       mqttClientEthernet.loop();
     }
   }
 }
 
 bool getStatusEthernet()
 {
-   for (uint8_t i = 0; i <= 20; i++) 
+  for (uint8_t i = 0; i <= 20; i++) 
+  {
+    if ((Ethernet.hardwareStatus() == EthernetNoHardware) || (Ethernet.linkStatus() == LinkOFF)) 
     {
-        if ((Ethernet.hardwareStatus() == EthernetNoHardware)
-            || (Ethernet.linkStatus() == LinkOFF)) {
-            Serial.print(".");
-            isConnection = false;
-            delay(80);
-        } 
-        else 
-        {
-            isConnection = true;
-            break;
-        }
+      isConnection = false;
+      resetTimersFromReconnectionOfEthernet = true;
+      delay(80);
+      Serial.println("Disconnect cable");
+    } 
+    else 
+    {
+      isConnection = true;
+      Serial.println("Connect cable");
+      break;
     }
+  }
 
-    return isConnection;
+  return isConnection;
 }

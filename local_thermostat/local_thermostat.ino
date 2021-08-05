@@ -35,7 +35,7 @@ bool isNewTemperature = false;
 bool isConnection = false;
 bool isTurnOffDisplay = false;
 bool isNewRequiredTemperatureFromSystem = false;
-
+bool resetTimersFromReconnectionOfEthernet = false;
 
 
 void setup() 
@@ -68,7 +68,8 @@ void loop()
     writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);
     if(isConnection)
     {
-       sendTemperature(temperature);
+      Serial.println("Send temperature on MQTT broker.");
+      sendTemperature(temperature);
     }
   }
 
@@ -84,8 +85,14 @@ void loop()
   if(typeOfConnection == ETHERNET)
   {
     mqttLoopEthernet();
-  }
 
+    if(resetTimersFromReconnectionOfEthernet)
+    {
+      timersSetup();
+      resetTimersFromReconnectionOfEthernet = false;
+    }
+  }
+  
   if(isNewRequiredTemperatureFromSystem)
   {
     writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
