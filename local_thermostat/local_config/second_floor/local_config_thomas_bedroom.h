@@ -1,4 +1,5 @@
 /*
+ *   $Id: local_config.h,v 1.5 2019/04/04 23:06:53 gaijin Exp $
  *
  * Change settings below to customize for -YOUR- local network.
  * 
@@ -6,9 +7,9 @@
 
 
 /*
- * "Hardware" MAC address.
+ * W5500 "hardware" MAC address.
  */
-uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x07 };
+uint8_t eth_MAC[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x21 };
 
 
 /*
@@ -16,10 +17,11 @@ uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x07 };
  * on your LAN.  These values must match YOUR SPECIFIC LAN.  The "eth_IP"
  * is the IP address for this gateway's ETHERNET port.
  */
-IPAddress IP(192, 168, 2, X);            // *** CHANGE THIS to something relevant for YOUR LAN. ***
-IPAddress SUBNET_MASK(255, 255, 255, 0);   // Subnet mask.
-IPAddress DNS_SERVER(8, 8, 8, 8);          // *** CHANGE THIS to match YOUR DNS server.           ***
-IPAddress GATEWAY(192, 168, 2, 1);      // *** CHANGE THIS to match YOUR Gateway (router).     ***
+IPAddress IP(192, 168, 11, 21);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
+IPAddress SUBNET__MASK(255, 255, 255, 0);		// Subnet mask.
+IPAddress DNS_SERVER(8, 8, 8, 8);		// *** CHANGE THIS to match YOUR DNS server.           ***
+IPAddress GATEWAY(192, 168, 11, 254);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
+
 
 // Type: ETHERNET, WIFI
 enum connection {
@@ -27,7 +29,7 @@ enum connection {
   WIFI,
 };
 
-connection typeOfConnection = WIFI;
+connection typeOfConnection = ETHERNET;
 
 // WIFI settings
 #define WIFI_SSID "AZGARD"
@@ -42,7 +44,7 @@ connection typeOfConnection = WIFI;
 #define MQTT_USER "homeassistant"
 #define MQTT_PASSWORD "VelmiSilneHesloProHomeassistant"
 
-String roomName = "middle-room";
+String roomName = "thomas-bedroom";
 
 
 // W5500

@@ -199,11 +199,11 @@ void mqttLoopEthernet()
   {
     if (!mqttClientEthernet.connected())
     {
-      setMqtt();
+      connectMqttEthernet();
     }
     else
     {
-       mqttClientEthernet.loop();
+      mqttClientEthernet.loop();
     }
   }
 }
@@ -215,7 +215,7 @@ bool getStatusEthernet()
     if ((Ethernet.hardwareStatus() == EthernetNoHardware) || (Ethernet.linkStatus() == LinkOFF)) 
     {
       isConnection = false;
-      resetTimersFromReconnectionOfEthernet = true;
+      resetTimersFromReconnectionSite = true;
       delay(80);
       Serial.println("Disconnect cable");
     } 

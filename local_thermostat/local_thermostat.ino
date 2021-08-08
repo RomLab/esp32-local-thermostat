@@ -35,7 +35,7 @@ bool isNewTemperature = false;
 bool isConnection = false;
 bool isTurnOffDisplay = false;
 bool isNewRequiredTemperatureFromSystem = false;
-bool resetTimersFromReconnectionOfEthernet = false;
+bool resetTimersFromReconnectionSite = false;
 
 
 void setup() 
@@ -85,12 +85,12 @@ void loop()
   if(typeOfConnection == ETHERNET)
   {
     mqttLoopEthernet();
+  }
 
-    if(resetTimersFromReconnectionOfEthernet)
-    {
-      timersSetup();
-      resetTimersFromReconnectionOfEthernet = false;
-    }
+  if(resetTimersFromReconnectionSite)
+  {
+    timersSetup();
+    resetTimersFromReconnectionSite = false;
   }
   
   if(isNewRequiredTemperatureFromSystem)

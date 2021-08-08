@@ -1,34 +1,64 @@
-Thomas bedroom
-DC-A6-32-25-1D-01
-192.168.11.22
+------ First floor ------ 
+Office
+DC-A6-32-25-1D-11
+192.168.11.11
 
-KuKitchen, workroom, living and diving room
-DC-A6-32-25-1D-02
-192.168.11.23
-
-Corridor and toiler
-DC-A6-32-25-1D-03
-192.168.11.24
+Corridor and toilet
+DC-A6-32-25-1D-12
+192.168.11.12
 
 Bathroom
-DC-A6-32-25-1D-04
-192.168.11.25
+DC-A6-32-25-1D-13
+192.168.11.13
+
+Kitchen
+DC-A6-32-25-1D-14
+192.168.11.14
+
+Living room
+DC-A6-32-25-1D-15
+192.168.11.15
+
+Cellar
+DC-A6-32-25-1D-16
+192.168.11.16
+
+Garage
+DC-A6-32-25-1D-17
+192.168.11.17
+
+------ Second floor ------
+Thomas bedroom
+DC-A6-32-25-1D-21
+192.168.11.21
+
+Kitchen, workroom, living and diving room
+DC-A6-32-25-1D-22
+192.168.11.22
+
+Corridor and toiler
+DC-A6-32-25-1D-23
+192.168.11.23
+
+Bathroom
+DC-A6-32-25-1D-24
+192.168.11.24
 
 North room
-DC-A6-32-25-1D-05
-192.168.11.26
+DC-A6-32-25-1D-25
+192.168.11.25
 
 Parents bedroom
-DC-A6-32-25-1D-06
-192.168.11.27
+DC-A6-32-25-1D-26
+192.168.11.26
 
 Middle room (WiFi modul)
 Default MAC and DHCP IP
 Static (optional):
-DC-A6-32-25-1D-07
-192.168.11.28
+DC-A6-32-25-1D-27
+192.168.11.27
 
 Corner room
-DC-A6-32-25-1D-08
-192.168.11.29
+DC-A6-32-25-1D-28
+192.168.11.28
 
