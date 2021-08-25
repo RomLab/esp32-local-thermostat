@@ -4,7 +4,7 @@ unsigned long lastInterruptMinusButton;
 unsigned long lastInterruptMinusButtonTurnOnDisplay;
 unsigned long lastInterruptMenuButton;
 unsigned long lastInterruptMenuButtonTurnOnDisplay;
-uint8_t const NEXT_INTERRUPT_BUTTON = 15; // ms
+uint8_t const NEXT_INTERRUPT_BUTTON = 40; // ms
 uint8_t const NEXT_INTERRUPT_BUTTON_TURN_ON_DISPLAY = 200; // ms
 
 volatile bool pressedPlusButton = false;
@@ -15,16 +15,31 @@ volatile bool pressedMenuButton = false;
 void IRAM_ATTR pressPlusTemp() 
 {
   pressedPlusButton = true;
+  // Only for turn on display from turn off state
+  if(!isTurnOnDisplay)
+  {
+     firstTurnOnDisplay();
+  }
 }
 
 void IRAM_ATTR pressMinusTemp() 
 {
   pressedMinusButton = true;
+  // Only for turn on display from turn off state
+  if(!isTurnOnDisplay)
+  {
+     firstTurnOnDisplay();
+  }
 }
 
 void IRAM_ATTR pressMenu() 
 {
   pressedMenuButton = true;
+  // Only for turn on display from turn off state
+  if(!isTurnOnDisplay)
+  {
+     firstTurnOnDisplay();
+  }
 }
 
 void buttonsSetup() 
