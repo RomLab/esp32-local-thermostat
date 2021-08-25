@@ -33,7 +33,8 @@ void timersSetup()
 
 void loopTimers()
 {
-  if (interruptCounter == 30) 
+  // Optimal ==, but problem with disconnect cable or MQTT broker
+  if (interruptCounter > 30) 
   {
     portENTER_CRITICAL(&timerMux);
     stopTimerForTurnOffDisplay();
@@ -43,7 +44,7 @@ void loopTimers()
     sendRequiredTemperature(requiredTemperature);
   }
   
-  if (interruptCounterTemp == 30) 
+  if (interruptCounterTemp > 30) 
   { 
     portENTER_CRITICAL(&timerMuxTemp);
     isNewTemperature = true;
