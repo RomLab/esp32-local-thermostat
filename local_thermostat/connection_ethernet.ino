@@ -184,10 +184,12 @@ void connectMqttEthernet()
     if (mqttClientEthernet.connect(clientId.c_str(), MQTT_USER, MQTT_PASSWORD)) 
     {
       setSubscribe();
+      isConnectionOfMQTTBroker = true;
       Serial.println("Connected to MQTT broker.");
     }
     else
     {
+      isConnectionOfMQTTBroker = false;
       Serial.println("Problem with connection to MQTT broker.");
     }
   }
@@ -215,7 +217,6 @@ bool getStatusEthernet()
     if ((Ethernet.hardwareStatus() == EthernetNoHardware) || (Ethernet.linkStatus() == LinkOFF)) 
     {
       isConnection = false;
-      resetTimersFromReconnectionSite = true;
       delay(80);
       Serial.println("Disconnect cable");
     } 

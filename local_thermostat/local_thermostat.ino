@@ -24,6 +24,7 @@ Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_PIN_SPI_CS, DISPLAY_PIN_SPI_DC, 
 // Icons of connection
 extern uint8_t online[];
 extern uint8_t offline[];
+extern uint8_t connectionOfMQTTBroker[];
 
 
 float requiredTemperature = DEFAULT_REQUIRED_TEMPERATURE;
@@ -33,9 +34,9 @@ bool isTurnOnDisplay = false;
 
 bool isNewTemperature = false;
 bool isConnection = false;
+bool isConnectionOfMQTTBroker = false;
 bool isTurnOffDisplay = false;
 bool isNewRequiredTemperatureFromSystem = false;
-bool resetTimersFromReconnectionSite = false;
 
 
 void setup() 
@@ -52,7 +53,7 @@ void setup()
   }
   else
   {
-     setupEthernet();
+    setupEthernet();
   }
 }
 
@@ -60,19 +61,7 @@ void loop()
 {
   loopTimers();
   loopButton();
-  setIconOfConnection();
   
-  if(isNewTemperature && isTurnOffDisplay)
-  {
-    float temperature = getTemperature();
-    writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);
-    if(isConnection)
-    {
-      Serial.println("Send temperature on MQTT broker.");
-      sendTemperature(temperature);
-    }
-  }
-
   if(!isConnection)
   {
     if(typeOfConnection == ETHERNET)
@@ -87,10 +76,17 @@ void loop()
     mqttLoopEthernet();
   }
 
-  if(resetTimersFromReconnectionSite)
+
+  setIconOfConnection();
+
+  if(isNewTemperature && isTurnOffDisplay)
   {
-    timersSetup();
-    resetTimersFromReconnectionSite = false;
+    float temperature = getTemperature();
+    writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);
+    if(isConnection)
+    {
+      sendTemperature(temperature);
+    }
   }
   
   if(isNewRequiredTemperatureFromSystem)
@@ -104,10 +100,20 @@ void setIconOfConnection()
 {
   if(isConnection)
   {
-    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_GREEN);;
+    tft.drawBitmap(0, 0, online, 20, 20, ILI9341_GREEN);
+    
+    if(isConnectionOfMQTTBroker)
+    {
+      tft.drawBitmap(25, 0, connectionOfMQTTBroker, 20, 20, ILI9341_GREEN);
+    }
+    else
+    {
+      tft.drawBitmap(25, 0, connectionOfMQTTBroker, 20, 20, ILI9341_RED);
+    }
   }
   else
   {
     tft.drawBitmap(0, 0, online, 20, 20, ILI9341_RED);
+    tft.drawBitmap(25, 0, connectionOfMQTTBroker, 20, 20, ILI9341_RED);
   }
 }

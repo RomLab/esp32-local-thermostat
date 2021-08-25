@@ -25,6 +25,11 @@ void tftSetup()
   turnOnDisplay();
 }
 
+void firstTurnOnDisplay()
+{
+  digitalWrite(21, HIGH);
+}
+
 void turnOnDisplay()
 {
    isTurnOnDisplay = true;
