@@ -44,8 +44,8 @@ connection typeOfConnection = ETHERNET;
 
 String roomName = "north-room";
 
-String floor = "first-floor"
-//String floor = "second-floor"
+String numberOfFloor = "first-floor";
+//String numberOfFloor = "second-floor";
 
 // W5500
 #define RESET_P 27        // Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
