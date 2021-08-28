@@ -21,7 +21,8 @@ void tftSetup()
   tft.setRotation(1);
   
   tft.fillScreen(TFT_BLACK);
-  writeOnDisplay(String(requiredTemperature), 160, 140, TFT_GREEN, 2);
+
+  writeOnDisplay(getNumberWithOnDecimalPlace(String(requiredTemperature)), 160, 140, TFT_GREEN, 2);
   turnOnDisplay();
 }
 

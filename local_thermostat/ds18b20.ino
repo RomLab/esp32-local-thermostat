@@ -25,5 +25,7 @@ float getTemperature()
   float roundTemperature = round((avarageTemperature) * 10) / 10;
   oldTemperature = roundTemperature; */
   sensors.requestTemperatures(); 
-  return sensors.getTempCByIndex(0) - correction;
+  float temperature = sensors.getTempCByIndex(0) - correction;
+  int16_t otherVariable = temperature * 10;
+  return (float)otherVariable/10;
 }

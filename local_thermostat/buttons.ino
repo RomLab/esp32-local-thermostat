@@ -66,7 +66,7 @@ void loopButton()
         startTimerForTurnOffDisplay();   
         oldRequiredTemperature =  requiredTemperature;       
         changeRequredTemperature(true);
-        writeOnDisplay(String(requiredTemperature), 160, 140, ILI9341_GREEN, 2);
+        writeOnDisplay(getNumberWithOnDecimalPlace(String(requiredTemperature)), 160, 140, ILI9341_GREEN, 2);
         lastInterruptPlusButton = millis();
       }
       else
@@ -89,7 +89,7 @@ void loopButton()
         startTimerForTurnOffDisplay();   
         oldRequiredTemperature =  requiredTemperature;
         changeRequredTemperature(false);
-        writeOnDisplay(String(requiredTemperature), 160, 140, ILI9341_GREEN, 2);
+        writeOnDisplay(getNumberWithOnDecimalPlace(String(requiredTemperature)), 160, 140, ILI9341_GREEN, 2);
         lastInterruptMinusButton = millis();
       }
       else

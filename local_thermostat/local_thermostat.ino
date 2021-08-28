@@ -100,7 +100,7 @@ void loop()
   if(isNewTemperature && !isTurnOnDisplay)
   {
     float temperature = getTemperature();
-    writeOnDisplay(String(temperature), 160, 60, ILI9341_RED, 1);
+    writeOnDisplay(getNumberWithOnDecimalPlace(String(temperature)), 160, 60, ILI9341_RED, 1);
     if(isConnection)
     {
       sendTemperature(temperature);
@@ -109,7 +109,7 @@ void loop()
   
   if(isNewRequiredTemperatureFromSystem)
   {
-    writeOnDisplay(String(requiredTemperature), 160, 140, ILI9341_GREEN, 2);
+    writeOnDisplay(getNumberWithOnDecimalPlace(String(requiredTemperature)), 160, 140, ILI9341_GREEN, 2);
     isNewRequiredTemperatureFromSystem = false;
   }
 }
