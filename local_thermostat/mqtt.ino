@@ -1,5 +1,5 @@
 // MQTT topic
-String samePrefix = "home/"+floor+"/"+roomName;
+String samePrefix = "home/"+numberOfFloor+"/"+roomName;
 String topicFromSystem = samePrefix+"/required-temperature-from-system";
 String topicFromDevice = samePrefix+"/required-temperature-from-device";
 String topicTemperature = samePrefix+"/temperature";
