@@ -4,8 +4,8 @@
 */
 
 #include <SPI.h>
-#include "EthernetSPI2.h"
-#include "EthernetUdp.h"
+#include "src/ethernet/EthernetSPI2.h"
+#include "src/ethernet/EthernetUdp.h"
 #include <PubSubClient.h>
 #include <stdlib.h>
 
@@ -14,7 +14,6 @@ PubSubClient mqttClientEthernet(ethClient);
 
 // A UDP instance to let us send and receive packets over UDP.
 EthernetUDP udp;
-
 
 
 /*

@@ -1,7 +1,7 @@
 // Fonts
-#include "Fonts/Calibri40.h"
-#include "Fonts/Calibri60.h"
-#include "Fonts/Calibri80.h"
+#include "fonts/Calibri40.h"
+#include "fonts/Calibri60.h"
+#include "fonts/Calibri80.h"
 
 // The font names are arrays references, thus must NOT be in quotes ""
 #define CURRENT_TEMPERATURE Calibri80
