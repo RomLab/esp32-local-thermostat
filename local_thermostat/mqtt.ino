@@ -1,8 +1,9 @@
 // MQTT topic
-String samePrefix = "home/first-floor/"+roomName;
+String samePrefix = "home/"+floor+"/"+roomName;
 String topicFromSystem = samePrefix+"/required-temperature-from-system";
 String topicFromDevice = samePrefix+"/required-temperature-from-device";
 String topicTemperature = samePrefix+"/temperature";
+String mqttUserMessage = "home/user-message";
 
 // For MQTT Ethernet
 char data[100];
@@ -11,11 +12,12 @@ void setSubscribe()
 {
   if(typeOfConnection == WIFI)
   {
-    asyncMqttClient.subscribe(getTopicArray(topicFromSystem), 2); 
+    asyncMqttClient.subscribe(topicFromSystem.c_str(), 2); 
   }
   else
   {
-    mqttClientEthernet.subscribe(getTopicArray(topicFromSystem), 1);
+    mqttClientEthernet.subscribe(topicFromSystem.c_str(), 1);
+    mqttClientEthernet.subscribe(mqttUserMessage.c_str(), 1);
   }
 }
 
@@ -23,12 +25,12 @@ void sendTemperature(float temperature)
 {
   if(typeOfConnection == WIFI)
   {
-    asyncMqttClient.publish(getTopicArray(topicTemperature), 2, true, String(temperature).c_str());  
+    asyncMqttClient.publish(topicTemperature.c_str(), 2, true, String(temperature).c_str());  
   }
   else
   {
     sprintf(data, "%f", temperature);
-    mqttClientEthernet.publish(getTopicArray(topicTemperature), data);
+    mqttClientEthernet.publish(topicTemperature.c_str(), data);
   }
 }
 
@@ -36,18 +38,26 @@ void sendRequiredTemperature(float requiredTemperature)
 {
   if(typeOfConnection == WIFI)
   {
-     asyncMqttClient.publish(getTopicArray(topicFromDevice), 2, true, String(requiredTemperature).c_str()); 
+     asyncMqttClient.publish(topicFromDevice.c_str(), 2, true, String(requiredTemperature).c_str()); 
   }
   else
   {
     sprintf(data, "%f", requiredTemperature);
-    mqttClientEthernet.publish(getTopicArray(topicFromDevice), data);
+    mqttClientEthernet.publish(topicFromDevice.c_str(), data);
   }
 }
 
-void parseTopic(char* topic, char* payload)
+void parseTopic(char* topic, String payload)
 {
-  if(strcmp(topic, getTopicArray(topicFromSystem)) == 0)
+  String topicString = String(topic);
+  if(topicString == mqttUserMessage)
+  {
+    String stringPayload = String(payload);
+    userMessage = stringPayload;
+    isNewUserMessage = true;
+  }
+  
+  if(topicString == topicFromSystem)
   {
     String stringPayload = String(payload);
     float value = stringPayload.toFloat();
@@ -57,12 +67,4 @@ void parseTopic(char* topic, char* payload)
     requiredTemperature = (float)intValue/10;
     isNewRequiredTemperatureFromSystem = true;
   }
-}
-
-char* getTopicArray(String topic)
-{
-  int lengthTopic = topic.length() + 1;    
-  char * topicArray = (char *) malloc (lengthTopic);
-  topic.toCharArray(topicArray, lengthTopic);
-  return topicArray;
 }

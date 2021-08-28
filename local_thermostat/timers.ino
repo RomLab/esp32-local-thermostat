@@ -44,7 +44,7 @@ void loopTimers()
     sendRequiredTemperature(requiredTemperature);
   }
   
-  if (interruptCounterTemp > 30) 
+  if (interruptCounterTemp > 5) 
   { 
     portENTER_CRITICAL(&timerMuxTemp);
     isNewTemperature = true;
@@ -64,7 +64,7 @@ void startTimerForTurnOffDisplay()
   timerAttachInterrupt(timer, &onTimer, true);
   timerAlarmWrite(timer, 1000000, true);
   timerAlarmEnable(timer);
-  isTurnOffDisplay = false;
+  isTurnOnDisplay = true;
 }
 
 void stopTimerForTurnOffDisplay()
@@ -73,7 +73,7 @@ void stopTimerForTurnOffDisplay()
   timerDetachInterrupt(timer);
   timerEnd(timer);
   timer = NULL;
-  isTurnOffDisplay = true;
+  isTurnOnDisplay = false;
 }
 
 void startTimerForSampleTemp()

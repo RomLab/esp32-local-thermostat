@@ -161,9 +161,11 @@ void setupEthernet()
 
 void callbackMqttEthernet(char* topic, byte* payload, unsigned int length) 
 {
+  String messageTemp;
   for (int i = 0; i < length; i++) 
   {    
-    parseTopic(topic, (char*)payload);
+    messageTemp += (char)payload[i];
+    parseTopic(topic, messageTemp);
   }
 }
 

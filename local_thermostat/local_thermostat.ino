@@ -1,14 +1,16 @@
 
-#include "Adafruit_GFX.h"
-#include "Adafruit_ILI9341.h"
+#include <SPI.h>
+#include <TFT_eSPI.h> 
+
 #include "local_config.h"  // <--- Change settings for YOUR network here.
 
 // SPI pins for display
-#define DISPLAY_PIN_SPI_CS    (5)
-#define DISPLAY_PIN_SPI_DC    (4)
-#define DISPLAY_PIN_SPI_MOSI  (23)
-#define DISPLAY_PIN_SPI_SCLK  (18)
-#define DISPLAY_PIN_SPI_RST   (22)
+// Define in TFT_eSPI, User_Setup.h
+//#define DISPLAY_PIN_SPI_CS    (5)
+//#define DISPLAY_PIN_SPI_DC    (4)
+//#define DISPLAY_PIN_SPI_MOSI  (23)
+//#define DISPLAY_PIN_SPI_SCLK  (18)
+//#define DISPLAY_PIN_SPI_RST   (22)
 //#define DISPLAY_PIN_SPI_MISO     // Not connected
 
 
@@ -19,25 +21,31 @@
 #define ETHERNET_PIN_SPI_SCK   (14)
 #define ETHERNET_PIN_RST       (27) // Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
 
-Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_PIN_SPI_CS, DISPLAY_PIN_SPI_DC, DISPLAY_PIN_SPI_MOSI, DISPLAY_PIN_SPI_SCLK, DISPLAY_PIN_SPI_RST);
+
+TFT_eSPI tft = TFT_eSPI();
 
 // Icons of connection
 extern uint8_t online[];
 extern uint8_t offline[];
 extern uint8_t connectionOfMQTTBroker[];
 
-
+// Temperatures
 float requiredTemperature = DEFAULT_REQUIRED_TEMPERATURE;
 float oldRequiredTemperature = 0;
 float oldTemperature = 0;
-bool isTurnOnDisplay = false;
-
+bool isNewRequiredTemperatureFromSystem = false;
 bool isNewTemperature = false;
+
+// Connection
 bool isConnection = false;
 bool isConnectionOfMQTTBroker = false;
-bool isTurnOffDisplay = false;
-bool isNewRequiredTemperatureFromSystem = false;
 
+bool isTurnOnDisplay = false;
+
+// User message
+String userMessage;
+bool isNewUserMessage = false;
+bool isEnableRotationUserMessage = false;
 
 void setup() 
 { 
@@ -62,6 +70,17 @@ void loop()
   loopTimers();
   loopButton();
   
+  if(isNewUserMessage)
+  {
+     writeOnDisplay(userMessage, 160, 205, TFT_WHITE, 3);
+     isNewUserMessage= false;
+  }
+
+  if(isEnableRotationUserMessage)
+  {
+     scrollTextOnDisplay(userMessage);
+  }
+   
   if(!isConnection)
   {
     if(typeOfConnection == ETHERNET)
@@ -76,13 +95,12 @@ void loop()
     mqttLoopEthernet();
   }
 
-
   setIconOfConnection();
 
-  if(isNewTemperature && isTurnOffDisplay)
+  if(isNewTemperature && !isTurnOnDisplay)
   {
     float temperature = getTemperature();
-    writeTemperature(temperature, 20, 80, ILI9341_RED, 6, 0);
+    writeOnDisplay(String(temperature), 160, 60, ILI9341_RED, 1);
     if(isConnection)
     {
       sendTemperature(temperature);
@@ -91,7 +109,7 @@ void loop()
   
   if(isNewRequiredTemperatureFromSystem)
   {
-    writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
+    writeOnDisplay(String(requiredTemperature), 160, 140, ILI9341_GREEN, 2);
     isNewRequiredTemperatureFromSystem = false;
   }
 }

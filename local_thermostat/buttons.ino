@@ -4,7 +4,7 @@ unsigned long lastInterruptMinusButton;
 unsigned long lastInterruptMinusButtonTurnOnDisplay;
 unsigned long lastInterruptMenuButton;
 unsigned long lastInterruptMenuButtonTurnOnDisplay;
-uint8_t const NEXT_INTERRUPT_BUTTON = 40; // ms
+uint8_t const NEXT_INTERRUPT_BUTTON = 120; // ms
 uint8_t const NEXT_INTERRUPT_BUTTON_TURN_ON_DISPLAY = 200; // ms
 
 volatile bool pressedPlusButton = false;
@@ -66,7 +66,7 @@ void loopButton()
         startTimerForTurnOffDisplay();   
         oldRequiredTemperature =  requiredTemperature;       
         changeRequredTemperature(true);
-        writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
+        writeOnDisplay(String(requiredTemperature), 160, 140, ILI9341_GREEN, 2);
         lastInterruptPlusButton = millis();
       }
       else
@@ -89,7 +89,7 @@ void loopButton()
         startTimerForTurnOffDisplay();   
         oldRequiredTemperature =  requiredTemperature;
         changeRequredTemperature(false);
-        writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
+        writeOnDisplay(String(requiredTemperature), 160, 140, ILI9341_GREEN, 2);
         lastInterruptMinusButton = millis();
       }
       else

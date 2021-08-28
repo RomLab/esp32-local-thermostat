@@ -5,7 +5,7 @@ OneWire oneWire(26);
 DallasTemperature sensors(&oneWire);
 
 // 3 sample
-int temperatures[3];
+//int temperatures[3];
 
 void tempSensorSetup() 
 {
@@ -14,8 +14,8 @@ void tempSensorSetup()
 
 float getTemperature() 
 {
-  float correction = 3.6;  
-  float sumTemperatures = 0;
+  float correction = 4;  
+ /* float sumTemperatures = 0;
   for (int index = 0; index < 3; index++)
   {
       sensors.requestTemperatures(); 
@@ -23,6 +23,7 @@ float getTemperature()
   } 
   float avarageTemperature = ((float)sumTemperatures) / 3 ;
   float roundTemperature = round((avarageTemperature) * 10) / 10;
-  oldTemperature = roundTemperature; 
-  return (roundTemperature);
+  oldTemperature = roundTemperature; */
+  sensors.requestTemperatures(); 
+  return sensors.getTempCByIndex(0) - correction;
 }

@@ -1,29 +1,30 @@
-/***************************************************
-  This is our GFX example for the Adafruit ILI9341 Breakout and Shield
-  ----> http://www.adafruit.com/products/1651
+// Fonts
+#include "Fonts/Calibri40.h"
+#include "Fonts/Calibri60.h"
+#include "Fonts/Calibri80.h"
 
-  Check out the links above for our tutorials and wiring diagrams
-  These displays use SPI to communicate, 4 or 5 pins are required to
-  interface (RST is optional)
-  Adafruit invests time and resources providing this open source code,
-  please support Adafruit and open-source hardware by purchasing
-  products from Adafruit!
+// The font names are arrays references, thus must NOT be in quotes ""
+#define CURRENT_TEMPERATURE Calibri80
+#define REQUIRED_TEMPERATURE Calibri60
+#define USER_MESSAGE Calibri40
 
-  Written by Limor Fried/Ladyada for Adafruit Industries.
-  MIT license, all text above must be included in any redistribution
- ****************************************************/
+// Scrolled text
+String oldScrolledText;
+uint8_t counterOfScroller = 0;
 
 void tftSetup() 
 {
-  // Turn on Display 
+  // Sets pin for turn on display
   pinMode(21, OUTPUT);
   
   tft.begin();
   tft.setRotation(1);
-  tft.fillScreen(ILI9341_BLACK);
-  writeTemperature(requiredTemperature, 40, 135, ILI9341_GREEN, 5, 1);
+  
+  tft.fillScreen(TFT_BLACK);
+  writeOnDisplay(String(requiredTemperature), 160, 140, TFT_GREEN, 2);
   turnOnDisplay();
 }
+
 
 void firstTurnOnDisplay()
 {
@@ -42,29 +43,84 @@ void turnOffDisplay()
    digitalWrite(21, LOW);
 }
 
-void writeTemperature(float temperatureC, int positionX, int positionY, uint16_t colorText, int sizeFont, int positionLine) 
+
+void writeOnDisplay(String text, int positionX, int positionY, uint16_t colorText, int positionLine) 
 {
-  bool clearTextForTemp = (temperatureC > 10 && oldTemperature <= 10) || (temperatureC < 10 && oldTemperature >= 10);
-  bool clearTextForRequiredTemp = (temperatureC > 10 && oldRequiredTemperature <= 10) || (temperatureC < 10 && oldRequiredTemperature >= 10);
-  // Clear text
-  if((clearTextForTemp && positionLine == 0) || (clearTextForRequiredTemp && positionLine == 1))
+  String tempText = text;
+  if(positionLine == 1)
   {
-    tft.setCursor(positionX, positionY);
-    tft.setTextSize(sizeFont); 
-    tft.setTextColor(colorText, ILI9341_BLACK);
-    tft.print("        ");
+      tft.loadFont(CURRENT_TEMPERATURE);
+      // Overprint with a filled rectangle
+      tft.fillRect(0, positionY, 320, 80, TFT_BLACK); 
+      tempText.replace('.', ',');
+      tempText += " °C";
+  }
+  else if(positionLine == 2)
+  {
+     tft.loadFont(REQUIRED_TEMPERATURE); 
+     // Overprint with a filled rectangle
+     tft.fillRect(0, positionY, 320, 60, TFT_BLACK); 
+     tempText.replace('.', ',');
+     tempText += " °C";
+  }
+  else
+  {
+    tft.loadFont(USER_MESSAGE); 
+    // Overprint with a filled rectangle
+    tft.fillRect(0, positionY, 320, 60, TFT_BLACK); 
+    if(tempText.length() > 18)
+    {
+      isEnableRotationUserMessage = true;
+      userMessage = tempText;
+      return;
+    }
+    else
+    {
+      isEnableRotationUserMessage = false;
+    }
   }
 
-  // Move position x
-  int tempPositionX = positionX;
-  if(temperatureC < 10)
+  tft.setTextColor(colorText, TFT_BLACK);
+  // Value font = 1 is not using
+  tft.drawCentreString(tempText, positionX, positionY, 1); 
+}
+
+
+void scrollTextOnDisplay(String userMassage)
+{
+  String tempText = userMassage;
+
+  if (counterOfScroller++ >= tempText.length())
   {
-     tempPositionX +=18+sizeFont;
+    counterOfScroller = 1;
   }
    
-  tft.setCursor(tempPositionX, positionY);
-  tft.setTextSize(sizeFont); 
-  tft.setTextColor(colorText, ILI9341_BLACK);
-  String stringTemperatureC = String(temperatureC); 
-  tft.println(stringTemperatureC + " " +(char)247 +"C");
+  setText(205, oldScrolledText, TFT_WHITE);
+  tempText = getScrolledText(tempText, counterOfScroller);
+  setText(205, tempText, TFT_WHITE);
+  oldScrolledText = tempText;
+
+  delay(200);
+}
+
+String getScrolledText(String text, uint8_t positionText)
+{
+   String scrolledText = "";
+   // Construct the string to display for this iteration
+   for (uint8_t index = 0; index < text.length(); index++)
+   {
+     scrolledText += text.charAt((positionText + index) % text.length());
+   }
+    
+   return scrolledText;
+}
+
+void setText(uint8_t row, String text, uint16_t colorText)
+{
+    tft.loadFont(USER_MESSAGE); 
+    tft.setTextColor(colorText, TFT_BLACK);
+    tft.setCursor(0, row);
+    // Overprint with a filled rectangle
+    tft.fillRect(0, row, 320, 60, TFT_BLACK); 
+    tft.print(text);
 }
