@@ -1,29 +1,31 @@
 ------ First floor ------ 
-Office
-DC-A6-32-25-1D-11
-192.168.11.11
-
 Corridor and toilet
+Default MAC and DHCP IP
+Static (optional):
 DC-A6-32-25-1D-12
 192.168.11.12
 
 Bathroom
+Default MAC and DHCP IP
+Static (optional):
 DC-A6-32-25-1D-13
 192.168.11.13
 
-Kitchen
-DC-A6-32-25-1D-14
-192.168.11.14
-
-Living room
+Living room and kitchen
+Default MAC and DHCP IP
+Static (optional):
 DC-A6-32-25-1D-15
 192.168.11.15
 
 Cellar
+Default MAC and DHCP IP
+Static (optional):
 DC-A6-32-25-1D-16
 192.168.11.16
 
 Garage
+Default MAC and DHCP IP
+Static (optional):
 DC-A6-32-25-1D-17
 192.168.11.17
 

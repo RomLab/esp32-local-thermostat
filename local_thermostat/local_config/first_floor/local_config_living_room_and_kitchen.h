@@ -44,7 +44,7 @@ connection typeOfConnection = ETHERNET;
 #define MQTT_USER "homeassistant"
 #define MQTT_PASSWORD "VelmiSilneHesloProHomeassistant"
 
-String roomName = "living-room";
+String roomName = "living-room-and-kitchen";
 
 String numberOfFloor = "first-floor";
 //String numberOfFloor = "second-floor";
