@@ -55,13 +55,18 @@ void onMqttConnectWifi(bool sessionPresent)
   Serial.println("Connected to MQTT.");
   Serial.print("Session present: ");
   Serial.println(sessionPresent);
-  
-  setSubscribe();
+  isConnectionOfMQTTBroker = sessionPresent;
+
+  if(sessionPresent)
+  {
+    setSubscribe();
+  }
 }
 
 void onMqttDisconnectWifi(AsyncMqttClientDisconnectReason reason) 
 {
   Serial.println("Disconnected from MQTT.");
+  isConnectionOfMQTTBroker = false;
   if (WiFi.isConnected()) {
     xTimerStart(mqttReconnectTimer, 0);
   }
