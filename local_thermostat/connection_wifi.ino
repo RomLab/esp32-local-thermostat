@@ -55,12 +55,8 @@ void onMqttConnectWifi(bool sessionPresent)
   Serial.println("Connected to MQTT.");
   Serial.print("Session present: ");
   Serial.println(sessionPresent);
-  isConnectionOfMQTTBroker = sessionPresent;
-
-  if(sessionPresent)
-  {
-    setSubscribe();
-  }
+  isConnectionOfMQTTBroker = true;
+  setSubscribe();
 }
 
 void onMqttDisconnectWifi(AsyncMqttClientDisconnectReason reason) 
@@ -102,22 +98,23 @@ void onMqttMessageWifi(char* topic, char* payload, AsyncMqttClientMessagePropert
 
 void setupWifi() 
 {
-  //WiFi.mode(WIFI_STA);
-  //esp_wifi_set_mac(WIFI_IF_STA, MAC_ADDRESS);
+  WiFi.mode(WIFI_STA);
+  esp_wifi_set_mac(WIFI_IF_STA, MAC_ADDRESS);
 
-  //if (!WiFi.config(IP, GATEWAY, SUBNET_MASK, DNS_SERVER)) {
-  // Serial.println("STA Failed to configure");
-  //   }
-  //Serial.println(WiFi.localIP());
+  if (!WiFi.config(IP, GATEWAY, SUBNET_MASK, DNS_SERVER)) 
+  {
+    Serial.println("STA Failed to configure");
+  }
+  Serial.println(WiFi.localIP());
   mqttReconnectTimer = xTimerCreate("mqttTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, reinterpret_cast<TimerCallbackFunction_t>(connectToMqttWifi));
   wifiReconnectTimer = xTimerCreate("wifiTimer", pdMS_TO_TICKS(2000), pdFALSE, (void*)0, reinterpret_cast<TimerCallbackFunction_t>(connectToWifi));
 
   WiFi.onEvent(WiFiEvent);
 
   asyncMqttClient.onConnect(onMqttConnectWifi);
-  //asyncMqttClient.onDisconnect(onMqttDisconnect);
+  asyncMqttClient.onDisconnect(onMqttDisconnectWifi);
   asyncMqttClient.onSubscribe(onMqttSubscribeWifi);
-  //asyncMqttClient.onUnsubscribe(onMqttUnsubscribe);
+  //asyncMqttClient.onUnsubscribe(onMqttUnsubscribeWifi);
   asyncMqttClient.onMessage(onMqttMessageWifi);
   asyncMqttClient.onPublish(onMqttPublishWifi);
   asyncMqttClient.setServer(MQTT_HOST, MQTT_PORT);
