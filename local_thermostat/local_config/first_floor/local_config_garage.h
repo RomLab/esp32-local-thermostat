@@ -9,7 +9,7 @@
 /*
  * W5500 "hardware" MAC address.
  */
-uint8_t eth_MAC[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x11 };
+uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x17 };
 
 
 /*
@@ -17,10 +17,10 @@ uint8_t eth_MAC[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x11 };
  * on your LAN.  These values must match YOUR SPECIFIC LAN.  The "eth_IP"
  * is the IP address for this gateway's ETHERNET port.
  */
-IPAddress IP(192, 168, 11, 11);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
-IPAddress SUBNET__MASK(255, 255, 255, 0);		// Subnet mask.
+IPAddress IP(192, 168, 2, 17);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
+IPAddress SUBNET_MASK(255, 255, 255, 0);		// Subnet mask.
 IPAddress DNS_SERVER(8, 8, 8, 8);		// *** CHANGE THIS to match YOUR DNS server.           ***
-IPAddress GATEWAY(192, 168, 11, 254);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
+IPAddress GATEWAY(192, 168, 2, 1);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
 
 
 // Type: ETHERNET, WIFI
@@ -29,7 +29,7 @@ enum connection {
   WIFI,
 };
 
-connection typeOfConnection = ETHERNET;
+connection typeOfConnection = WIFI;
 
 // WIFI settings
 #define WIFI_SSID "AZGARD"

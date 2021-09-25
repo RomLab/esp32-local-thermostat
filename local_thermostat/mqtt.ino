@@ -10,10 +10,11 @@ String topicActualTime =  samePrefix+"/actual-time";
 char data[100];
 
 void setSubscribe()
-{
+{  
   if(typeOfConnection == WIFI)
   {
     asyncMqttClient.subscribe(topicFromSystem.c_str(), 2); 
+    asyncMqttClient.subscribe(mqttUserMessage.c_str(), 2);
   }
   else
   {
@@ -63,6 +64,7 @@ void sendRequiredTemperature(float requiredTemperature)
 
 void parseTopic(char* topic, String payload)
 {
+
   String topicString = String(topic);
   if(topicString == mqttUserMessage)
   {
