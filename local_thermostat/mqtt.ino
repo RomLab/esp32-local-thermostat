@@ -4,6 +4,7 @@ String topicFromSystem = samePrefix+"/required-temperature-from-system";
 String topicFromDevice = samePrefix+"/required-temperature-from-device";
 String topicTemperature = samePrefix+"/temperature";
 String mqttUserMessage = "home/user-message";
+String topicActualTime =  samePrefix+"/actual-time";
 
 // For MQTT Ethernet
 char data[100];
@@ -18,6 +19,19 @@ void setSubscribe()
   {
     mqttClientEthernet.subscribe(topicFromSystem.c_str(), 1);
     mqttClientEthernet.subscribe(mqttUserMessage.c_str(), 1);
+  }
+}
+
+void sendActualTime(String actualTime)
+{
+  if(typeOfConnection == WIFI)
+  {
+    asyncMqttClient.publish(topicActualTime.c_str(), 2, true, actualTime.c_str());  
+  }
+  else
+  {
+    sprintf(data, "%s", actualTime);
+    mqttClientEthernet.publish(topicActualTime.c_str(), data);
   }
 }
 

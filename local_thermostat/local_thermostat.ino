@@ -1,6 +1,6 @@
 
 #include <SPI.h>
-#include <TFT_eSPI.h> 
+#include <TFT_eSPI.h>
 
 #include "local_config.h"  // <--- Change settings for YOUR network here.
 
@@ -63,6 +63,8 @@ void setup()
   {
     setupEthernet();
   }
+
+  ntpSetup();
 }
 
 void loop() 
@@ -112,6 +114,8 @@ void loop()
     writeOnDisplay(getNumberWithOnDecimalPlace(String(requiredTemperature)), 160, 140, ILI9341_GREEN, 2);
     isNewRequiredTemperatureFromSystem = false;
   }
+
+  ntpLoop();
 }
 
 void setIconOfConnection()
