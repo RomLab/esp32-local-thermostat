@@ -13,7 +13,7 @@ EthernetClient ethClient;
 PubSubClient mqttClientEthernet(ethClient); 
 
 // A UDP instance to let us send and receive packets over UDP.
-EthernetUDP udp;
+EthernetUDP ethernetUdp;
 
 
 /*
@@ -153,7 +153,7 @@ void setupEthernet()
     {
         isConnection = true;
         Serial.println(" OK");
-        udp.begin(localPort);
+        ethernetUdp.begin(localPort);
         setMqtt();
     }
 }

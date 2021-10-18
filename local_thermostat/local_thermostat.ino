@@ -104,8 +104,9 @@ void loop()
     float temperature = getTemperature();
     writeOnDisplay(getNumberWithOnDecimalPlace(String(temperature)), 160, 60, ILI9341_RED, 1);
     if(isConnection)
-    {
+    {      
       sendTemperature(temperature);
+      ntpLoop();
     }
   }
   
@@ -114,8 +115,6 @@ void loop()
     writeOnDisplay(getNumberWithOnDecimalPlace(String(requiredTemperature)), 160, 140, ILI9341_GREEN, 2);
     isNewRequiredTemperatureFromSystem = false;
   }
-
-  ntpLoop();
 }
 
 void setIconOfConnection()
