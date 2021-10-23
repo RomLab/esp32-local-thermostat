@@ -73,14 +73,6 @@ int getUtcTimeInMinutes()
         // The hour (86400 equals secs per day).
         int hours = ((epoch % 86400L) / 3600);  
 
-        if(hours + 2 > 23)
-        {
-          hours = 0;
-        }
-        else
-        {
-          hours +=2;
-        }
         // The minute (3600 equals secs per minute).
         int minutes = ((epoch % 3600) / 60);      
 
