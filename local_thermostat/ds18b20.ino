@@ -14,7 +14,7 @@ void tempSensorSetup()
 
 float getTemperature() 
 {
-  float correction = 4;  
+  //float correction = 4;  
  /* float sumTemperatures = 0;
   for (int index = 0; index < 3; index++)
   {
@@ -25,7 +25,7 @@ float getTemperature()
   float roundTemperature = round((avarageTemperature) * 10) / 10;
   oldTemperature = roundTemperature; */
   sensors.requestTemperatures(); 
-  float temperature = sensors.getTempCByIndex(0) - correction;
+  float temperature = sensors.getTempCByIndex(0) - TEMPERATURE_CORRECTION;
   int16_t otherVariable = temperature * 10;
   return (float)otherVariable/10;
 }
