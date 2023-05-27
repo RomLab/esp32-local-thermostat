@@ -37,7 +37,7 @@ connection typeOfConnection = WIFI;
 
 
 // MQTT settings
-#define MQTT_HOST IPAddress(192, 168, 11, 247)
+#define MQTT_HOST IPAddress(192, 168, 11, 196)
 //#define MQTT_HOST "broker.hivemq.com"
 #define MQTT_PORT 1883
 
