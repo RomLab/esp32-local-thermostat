@@ -1,0 +1,2 @@
+Required libraries version:
+v1.0.6 (esp32): https://github.com/espressif/arduino-esp32
