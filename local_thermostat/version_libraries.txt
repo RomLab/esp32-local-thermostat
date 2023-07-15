@@ -1,2 +1,11 @@
 Required libraries version:
 v1.0.6 (esp32): https://github.com/espressif/arduino-esp32
+
+Libraries in C:\Users\user_name\Documents\Arduino\libraries\TFT_eSPI
+AsyncMqttClient
+AsyncTCP 		v1.1.4
+DallasTemperature 	v3.9.0
+ES32Lab 		v0.8.1
+OneWire 		v2.3.7
+PubSubclient 		v2.8
+TFT_eSPI 		v2.5.0
