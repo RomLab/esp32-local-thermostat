@@ -16,10 +16,10 @@ uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0xXX };
  * on your LAN.  These values must match YOUR SPECIFIC LAN.  The "eth_IP"
  * is the IP address for this gateway's ETHERNET port.
  */
-IPAddress IP(192, 168, 11, XX);            // *** CHANGE THIS to something relevant for YOUR LAN. ***
+IPAddress IP(192, 168, XX, XX);            // *** CHANGE THIS to something relevant for YOUR LAN. ***
 IPAddress SUBNET_MASK(255, 255, 255, 0);   // Subnet mask.
 IPAddress DNS_SERVER(8, 8, 8, 8);          // *** CHANGE THIS to match YOUR DNS server.           ***
-IPAddress GATEWAY(192, 168, 11, 254);      // *** CHANGE THIS to match YOUR Gateway (router).     ***
+IPAddress GATEWAY(192, 168, XX, XX);      // *** CHANGE THIS to match YOUR Gateway (router).     ***
 
 // Type: ETHERNET, WIFI
 enum connection {
@@ -35,7 +35,7 @@ connection typeOfConnection = ETHERNET;
 
 
 // MQTT settings
-#define MQTT_HOST IPAddress(192, 168, 11, 247)
+#define MQTT_HOST IPAddress(192, 168, 11, 196)
 //#define MQTT_HOST "broker.hivemq.com"
 #define MQTT_PORT 1883
 
