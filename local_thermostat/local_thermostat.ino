@@ -5,7 +5,7 @@
 #include "local_config.h"  // <--- Change settings for YOUR network here.
 
 // SPI pins for display
-// Define in TFT_eSPI, User_Setup.h in C:\Users\user_name\Documents\Arduino\libraries\TFT_eSPI
+// Define in TFT_eSPI, User_Setup.h in …\libraries\TFT_eSPI
 //#define DISPLAY_PIN_SPI_CS    (5)
 //#define DISPLAY_PIN_SPI_DC    (4)
 //#define DISPLAY_PIN_SPI_MOSI  (23)

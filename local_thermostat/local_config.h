@@ -1,4 +1,5 @@
 /*
+ *   $Id: local_config.h,v 1.5 2019/04/04 23:06:53 gaijin Exp $
  *
  * Change settings below to customize for -YOUR- local network.
  * 
@@ -6,9 +7,9 @@
 
 
 /*
- * "Hardware" MAC address.
+ * W5500 "hardware" MAC address.
  */
-uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0xXX };
+uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0x13 };
 
 
 /*
@@ -16,10 +17,11 @@ uint8_t MAC_ADDRESS[] = { 0xDC, 0xA6, 0x32, 0x25, 0x1D, 0xXX };
  * on your LAN.  These values must match YOUR SPECIFIC LAN.  The "eth_IP"
  * is the IP address for this gateway's ETHERNET port.
  */
-IPAddress IP(192, 168, XX, XX);            // *** CHANGE THIS to something relevant for YOUR LAN. ***
-IPAddress SUBNET_MASK(255, 255, 255, 0);   // Subnet mask.
-IPAddress DNS_SERVER(8, 8, 8, 8);          // *** CHANGE THIS to match YOUR DNS server.           ***
-IPAddress GATEWAY(192, 168, XX, XX);      // *** CHANGE THIS to match YOUR Gateway (router).     ***
+IPAddress IP(192, 168, 2, 13);		// *** CHANGE THIS to something relevant for YOUR LAN. ***
+IPAddress SUBNET_MASK(255, 255, 255, 0);		// Subnet mask.
+IPAddress DNS_SERVER(8, 8, 8, 8);		// *** CHANGE THIS to match YOUR DNS server.           ***
+IPAddress GATEWAY(192, 168, 2, 1);		// *** CHANGE THIS to match YOUR Gateway (router).     ***
+
 
 // Type: ETHERNET, WIFI
 enum connection {
@@ -27,7 +29,7 @@ enum connection {
   WIFI,
 };
 
-connection typeOfConnection = ETHERNET;
+connection typeOfConnection = WIFI;
 
 // WIFI settings
 #define WIFI_SSID "AZGARD"
@@ -42,10 +44,11 @@ connection typeOfConnection = ETHERNET;
 #define MQTT_USER "homeassistant"
 #define MQTT_PASSWORD "VelmiSilneHesloProHomeassistant"
 
-String roomName = "north-room";
+String roomName = "bathroom";
 
 String numberOfFloor = "first-floor";
 //String numberOfFloor = "second-floor";
+
 
 // W5500
 #define RESET_P 27        // Tie the Wiz820io/W5500 reset pin to ESP32 GPIO26 pin.
@@ -76,4 +79,4 @@ const uint8_t MIN_REQUERED_TEMPERATURE = 0;
 const uint8_t MAX_REQUERED_TEMPERATURE = 30;
 const float CHANGE_TEMPERATURE = 0.5;
 const float DEFAULT_REQUIRED_TEMPERATURE = 20;
-const float TEMPERATURE_CORRECTION = 0.5;
+const float TEMPERATURE_CORRECTION = 3.7;
