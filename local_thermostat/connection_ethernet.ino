@@ -4,8 +4,8 @@
 */
 
 #include <SPI.h>
-#include "src/ethernet/EthernetSPI2.h"
-#include "src/ethernet/EthernetUdp.h"
+#include <EthernetSPI2.h>
+#include <EthernetUdp.h>
 #include <PubSubClient.h>
 #include <stdlib.h>
 
